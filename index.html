@@ -1,0 +1,2570 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="author" content="Angelo Werleman" />
+
+
+
+<title>Dashboard</title>
+
+<meta property="og:title" content="Dashboard" />
+
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+
+<link rel="icon" href="data:image/x-icon;" type="image/x-icon">
+
+
+<script type="text/javascript">
+window.FlexDashboardComponents = [];
+</script>
+
+<script src="index_files/header-attrs-2.29/header-attrs.js"></script>
+<script src="index_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<link href="index_files/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="index_files/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+<script src="index_files/sly-1.6.1/sly.min.js"></script>
+<script src="index_files/stickytableheaders-0.1.19/jquery.stickytableheaders.min.js"></script>
+<link href="index_files/value-box-accent-static-0.6.2/theme-cosmo-value-box.css" rel="stylesheet" />
+<link href="index_files/flexdashboard-css-0.6.2/flexdashboard.min.css" rel="stylesheet" />
+<link href="index_files/flexdashboard-css-0.6.2/theme-cosmo.css" rel="stylesheet" />
+<link href="index_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="index_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="index_files/plotly-binding-4.10.4/plotly.js"></script>
+<script src="index_files/typedarray-0.1/typedarray.min.js"></script>
+<link href="index_files/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="index_files/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="index_files/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="index_files/plotly-main-2.11.1/plotly-latest.min.js"></script>
+<style type="text/css">
+/*
+  CSS for flexdashboard.js' use of Sly(). The sizing/position of this CSS needs to be
+  applied _before_ flexdashboard.js initializes, which is why this CSS has been pulled
+  out from flexdashboard.scss and inlined in the document's head.
+*/
+
+.storyboard-nav button {
+  background: transparent;
+  border: 0;
+  opacity: .3;
+  outline: none;
+  padding: 0;
+}
+
+.storyboard-nav button:hover,
+.storyboard-nav button:hover {
+  opacity: .5;
+}
+
+.storyboard-nav button:disabled,
+.storyboard-nav button:disabled {
+  opacity: .1;
+}
+
+.storyboard-nav .sbnext,
+.storyboard-nav .sbprev {
+  float: left;
+  width: 2%;
+  height: 120px;
+}
+
+.storyboard-nav .sbprev {
+  text-align: left;
+  width: 2%;
+}
+
+.storyboard-nav .sbnext {
+  float: right;
+  text-align: right;
+  margin-right: 8px;
+}
+
+.storyboard-nav .sbframelist {
+  margin: 0 auto;
+  width: 94%;
+  height: 120px;
+  overflow: hidden;
+  text-shadow: none;
+  margin-bottom: 8px;
+}
+
+.storyboard-nav .sbframelist ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.storyboard-nav .sbframelist ul li {
+  float: left;
+  width: 270px;
+  height: 100%;
+  padding: 10px 10px 10px 10px;
+  margin-right: 8px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.storyboard-nav .sbframelist ul li:last-child {
+  margin-right: 0px;
+}
+
+.sbframe-commentary {
+  width: 300px;
+}
+
+.sbframe-commentary ul {
+  padding-left: 22px;
+}
+
+.sbframe.active {
+  display: flex;
+}
+
+.sbframe:not(.active) {
+  display: none;
+}
+@media only screen and (min-width: 768px) {
+html, body {
+  height: 100%;
+}
+
+#dashboard-container {
+  height: 100%;
+}
+}
+</style>
+
+
+
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="container-fluid">
+<div class="navbar-header">
+
+<span class="navbar-logo pull-left">
+  
+</span>
+<span class="navbar-brand">
+  Dashboard
+  <span class="navbar-author">
+    Angelo Werleman
+    </span>
+</span>
+
+<button id="navbar-button" type="button" class="navbar-toggle collapsed pull-right" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+
+</div>
+<div id="navbar" class="navbar-collapse collapse">
+<ul class="nav navbar-nav navbar-left">
+</ul>
+<ul class="nav navbar-nav navbar-right">
+</ul>
+</div><!--/.nav-collapse-->
+</div><!--/.container-->
+</div><!--/.navbar-->
+
+<img class="mobile-figure" data-mobile-figure-id=fig1 src="index_files/figure-html/unnamed-chunk-2-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig2 src="index_files/figure-html/unnamed-chunk-3-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig3 src="index_files/figure-html/unnamed-chunk-4-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig4 src="index_files/figure-html/unnamed-chunk-5-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig5 src="index_files/figure-html/unnamed-chunk-6-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig6 src="index_files/figure-html/unnamed-chunk-7-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig7 src="index_files/figure-html/unnamed-chunk-8-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig8 src="index_files/figure-html/unnamed-chunk-9-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig9 src="index_files/figure-html/unnamed-chunk-10-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig10 src="index_files/figure-html/unnamed-chunk-11-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig11 src="index_files/figure-html/unnamed-chunk-12-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig12 src="index_files/figure-html/unnamed-chunk-13-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig13 src="index_files/figure-html/unnamed-chunk-14-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig14 src="index_files/figure-html/unnamed-chunk-15-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig15 src="index_files/figure-html/unnamed-chunk-16-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig16 src="index_files/figure-html/unnamed-chunk-17-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig17 src="index_files/figure-html/unnamed-chunk-18-1.mb.png" />
+<script type="text/javascript">
+
+
+var FlexDashboard = (function () {
+
+  // initialize options
+  var _options = {};
+
+  var FlexDashboard = function() {
+
+    // default options
+    _options = $.extend(_options, {
+      theme: "cosmo",
+      fillPage: false,
+      orientation: 'columns',
+      storyboard: false,
+      defaultFigWidth: 576,
+      defaultFigHeight: 461,
+      defaultFigWidthMobile: 360,
+      defaultFigHeightMobile: 461,
+      isMobile: false,
+      isPortrait: false,
+      resize_reload: true
+    });
+  };
+
+  function init(options) {
+
+    // extend default options
+    $.extend(true, _options, options);
+
+    // add ids to sections that don't have them (pandoc won't assign ids
+    // to e.g. sections with titles consisting of only chinese characters)
+    var nextId = 1;
+    $('.level1:not([id]),.level2:not([id]),.level3:not([id])').each(function() {
+      $(this).attr('id', 'dashboard-' + nextId++);
+    });
+
+    // find navbar items
+    var navbarItems = $('#flexdashboard-navbar');
+    if (navbarItems.length)
+      navbarItems = JSON.parse(navbarItems.html());
+    addNavbarItems(navbarItems);
+
+    // find the main dashboard container
+    var dashboardContainer = $('#dashboard-container');
+
+    // resolve mobile classes
+    resolveMobileClasses(dashboardContainer);
+
+    // one time global initialization for components
+    componentsInit(dashboardContainer);
+
+    // look for a global sidebar
+    var globalSidebar = dashboardContainer.find(".section.level1.sidebar");
+    if (globalSidebar.length > 0) {
+
+      // global layout for fullscreen displays
+      if (!isMobilePhone()) {
+
+         // hoist it up to the top level
+         globalSidebar.insertBefore(dashboardContainer);
+
+         // lay it out (set width/positions)
+         layoutSidebar(globalSidebar, dashboardContainer);
+
+      // tuck sidebar into first page for mobile phones
+      } else {
+
+        // convert it into a level3 section
+        globalSidebar.removeClass('sidebar');
+        globalSidebar.removeClass('level1');
+        globalSidebar.addClass('level3');
+        var h1 = globalSidebar.children('h1');
+        var h3 = $('<h3></h3>');
+        h3.append(h1.contents());
+        h3.insertBefore(h1);
+        h1.detach();
+
+        // move it into the first page
+        var page = dashboardContainer.find('.section.level1').first();
+        if (page.length > 0)
+          page.prepend(globalSidebar);
+      }
+    }
+
+    // look for pages to layout
+    var pages = $('div.section.level1');
+    if (pages.length > 0) {
+
+        // find the navbar and collapse on clicked
+        var navbar = $('#navbar');
+        navbar.on("click", "a[data-toggle!=dropdown]", null, function () {
+           navbar.collapse('hide');
+        });
+
+        // envelop the dashboard container in a tab content div
+        dashboardContainer.wrapInner('<div class="tab-content"></div>');
+
+        pages.each(function(index) {
+
+          // lay it out
+          layoutDashboardPage($(this));
+
+          // add it to the navbar
+          addToNavbar($(this), index === 0);
+
+        });
+
+    } else {
+
+      // remove the navbar and navbar button if we don't
+      // have any navbuttons
+      if (navbarItems.length === 0) {
+        $('#navbar').remove();
+        $('#navbar-button').remove();
+      }
+
+      // add the storyboard class if requested
+      if (_options.storyboard)
+        dashboardContainer.addClass('storyboard');
+
+      // layout the entire page
+      layoutDashboardPage(dashboardContainer);
+    }
+
+    // if we are in shiny we need to trigger a window resize event to
+    // force correct layout of shiny-bound-output elements
+    if (isShinyDoc())
+      $(window).trigger('resize');
+
+    // make main components visible
+    $('.section.sidebar').css('visibility', 'visible');
+    dashboardContainer.css('visibility', 'visible');
+
+    // handle location hash
+    handleLocationHash();
+
+    // intialize prism highlighting
+    initPrismHighlighting();
+
+    // record mobile and orientation state then register a handler
+    // to refresh if resize_reload is set to true and it changes
+    _options.isMobile = isMobilePhone();
+    _options.isPortrait = isPortrait();
+    if (_options.resize_reload) {
+      $(window).on('resize', function() {
+        if (_options.isMobile !== isMobilePhone() ||
+            _options.isPortrait !== isPortrait()) {
+          window.location.reload();
+        }
+      });
+    } else {
+      // if in desktop mode and resizing to mobile, make sure the heights are 100%
+      // This enforces what `fillpage.css` does for "wider" pages.
+      // Since we are not reloading once the page becomes small, we need to force the height to 100%
+      // This is a new situation introduced when `_options.resize_reload` is `false`
+      if (! _options.isMobile) {
+        // only add if `fillpage.css` was added in the first place
+        if (_options.fillPage) {
+          // fillpage.css
+          $("html,body,#dashboard").css("height", "100%");
+        }
+      }
+    }
+    // trigger layoutcomplete event
+    dashboardContainer.trigger('flexdashboard:layoutcomplete');
+  }
+
+  function resolveMobileClasses(dashboardContainer) {
+     // add top level layout class
+    dashboardContainer.addClass(isMobilePhone() ? 'mobile-layout' :
+                                                  'desktop-layout');
+
+    // look for .mobile sections and add .no-mobile to their peers
+    var mobileSections = $('.section.mobile');
+    mobileSections.each(function() {
+       var id = $(this).attr('id');
+       var nomobileId = id.replace(/-\d+$/, '');
+       $('#' + nomobileId).addClass('no-mobile');
+    });
+  }
+
+  function addNavbarItems(navbarItems) {
+
+    var navbarLeft = $('ul.navbar-left');
+    var navbarRight = $('ul.navbar-right');
+
+    for (var i = 0; i<navbarItems.length; i++) {
+
+      // get the item
+      var item = navbarItems[i];
+
+      // determine the container
+      var container = null;
+      if (item.align === "left")
+        container = navbarLeft;
+      else
+        container = navbarRight;
+
+      // navbar menu if we have multiple items
+      if (item.items) {
+        var menu = navbarMenu(null, item.icon, item.title, container);
+        for (var j = 0; j<item.items.length; j++) {
+          var subItem = item.items[j];
+          var li = $('<li></li>');
+          var a = navbarLink(subItem.icon, subItem.title, subItem.href, subItem.target);
+          a.removeClass("nav-link").addClass("dropdown-item");
+          li.append(a);
+          menu.append(li);
+        }
+      } else {
+        var li = $('<li class="nav-item"></li>');
+        li.append(navbarLink(item.icon, item.title, item.href, item.target));
+        container.append(li);
+      }
+    }
+  }
+
+  // create or get a reference to an existing dropdown menu
+  function navbarMenu(id, icon, title, container) {
+    var existingMenu = [];
+    if (id)
+      existingMenu = container.children('#' + id);
+    if (existingMenu.length > 0) {
+      return existingMenu.children('ul');
+    } else {
+      var li = $('<li class="nav-item"></li>');
+      if (id)
+        li.attr('id', id);
+      li.addClass('dropdown');
+      // auto add "Share" title on mobile if necessary
+      if (!title && icon && (icon === "fa-share-alt") && isMobilePhone())
+        title = "Share";
+      if (title) {
+        title = title + ' <span class="caret"></span>';
+      }
+      var a = navbarLink(icon, title, "#");
+      a.addClass('dropdown-toggle');
+      a.attr('data-toggle', 'dropdown');
+      a.attr('data-bs-toggle', 'dropdown');
+      a.attr('role', 'button');
+      a.attr('aria-expanded', 'false');
+      li.append(a);
+      var ul = $('<ul class="dropdown-menu"></ul>');
+      ul.attr('role', 'menu');
+      li.append(ul);
+      container.append(li);
+      return ul;
+    }
+  }
+
+  function addToNavbar(page, active) {
+
+    // capture the id and data-icon attribute (if any)
+    var id = page.attr('id');
+    var icon = page.attr('data-icon');
+    var navmenu = page.attr('data-navmenu');
+    var navmenuIcon = page.attr('data-navmenu-icon');
+
+    // get hidden state (transfer this to navbar)
+    var hidden = page.hasClass('hidden');
+    page.removeClass('hidden');
+
+    // sanitize the id for use with bootstrap tabs
+    id = id.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_');
+    page.attr('id', id);
+
+    // get the wrapper
+    var wrapper = page.closest('.dashboard-page-wrapper');
+
+    // move the id to the wrapper
+    page.removeAttr('id');
+    wrapper.attr('id', id);
+
+    // add the tab-pane class to the wrapper
+    wrapper.addClass('tab-pane');
+
+    // get a reference to the h1, discover its inner contens, then detach it
+    var h1 = wrapper.find('h1').first();
+    var title = h1.contents();
+    h1.detach();
+
+    // create a navbar item
+    var li = $('<li></li>');
+    var a = navbarLink(icon, title, '#' + id);
+    a.attr('data-toggle', 'tab');
+    a.attr('data-bs-toggle', 'tab');
+    li.append(a);
+
+    // add it to the navbar (or navbar menu if specified)
+    var container = $('ul.navbar-left');
+    if (navmenu) {
+      var menuId = navmenu.replace(/\s+/g, '');
+      var menu = navbarMenu(menuId, navmenuIcon, navmenu, container);
+      li.find("> a").removeClass("nav-link").addClass("dropdown-item");
+      menu.append(li);
+    } else {
+      li.addClass("nav-item")
+      container.append(li);
+    }
+
+    // mark active tab and corresponding nav menu item
+    if (active)
+      $(a).tab("show");
+
+    // hide it if requested
+    if (hidden)
+      li.addClass('hidden');
+  }
+
+  function navbarLink(icon, title, href, target) {
+
+    var a = $('<a class="nav-link"></a>');
+    if (icon) {
+
+      // get the name of the icon set and icon
+      var dashPos = icon.indexOf("-");
+      var iconSet = null;
+      var iconSplit = icon.split(" ");
+      if (iconSplit.length > 1) {
+        iconSet = iconSplit[0];
+        icon = iconSplit.slice(1).join(" ");
+      } else {
+        iconSet = icon.substring(0, dashPos);
+      }
+      var iconName = icon.substring(dashPos + 1);
+
+      // create the icon
+      var iconElement = $('<span class="' + iconSet + ' ' + icon + '"></span>');
+      if (title)
+        iconElement.css('margin-right', '7px');
+      a.append(iconElement);
+      // if href is null see if we can auto-generate based on icon (e.g. social)
+      if (!href)
+        maybeGenerateLinkFromIcon(iconName, a);
+    }
+    if (title)
+      a.append(title);
+
+    // add the href.
+    if (href) {
+      if (href === "source_embed") {
+        a.attr('href', '#');
+        a.attr('data-featherlight', "#flexdashboard-source-code");
+        a.featherlight({
+            beforeOpen: function(event){
+              $('body').addClass('unselectable');
+            },
+            afterClose: function(event){
+              $('body').removeClass('unselectable');
+            }
+        });
+      } else {
+        a.attr('href', href);
+      }
+    }
+
+    // add the arget
+    if (target)
+      a.attr('target', target);
+
+    return a;
+  }
+
+  // auto generate a link from an icon name (e.g. twitter) when possible
+  function maybeGenerateLinkFromIcon(iconName, a) {
+
+     var serviceLinks = {
+      "twitter": "https://twitter.com/share?text=" + encodeURIComponent(document.title) + "&url="+encodeURIComponent(location.href),
+      "facebook": "https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(location.href),
+      "linkedin": "https://www.linkedin.com/shareArticle?mini=true&url="+encodeURIComponent(location.href) + "&title=" + encodeURIComponent(document.title),
+      "pinterest": "https://pinterest.com/pin/create/link/?url="+encodeURIComponent(location.href) + "&description=" + encodeURIComponent(document.title)
+    };
+
+    var makeSocialLink = function(a, href) {
+      a.attr('href', '#');
+      a.on('click', function(e) {
+        e.preventDefault();
+        window.open(href);
+      });
+    };
+
+    $.each(serviceLinks, function(key, value) {
+      if (iconName.indexOf(key) !== -1)
+        makeSocialLink(a, value);
+    });
+  }
+
+  // layout a dashboard page
+  function layoutDashboardPage(page) {
+
+    // use a page wrapper so that free form content above the
+    // dashboard appears at the top rather than the side (as it
+    // would without the wrapper in a column orientation)
+    var wrapper = $('<div class="dashboard-page-wrapper"></div>');
+    page.wrap(wrapper);
+
+    // if there are no level2 or level3 headers synthesize a level3
+    // header to contain the (e.g. frame it, scroll container, etc.)
+    var headers = page.find('h2,h3');
+    if (headers.length === 0)
+      page.wrapInner('<div class="section level3"></div>');
+
+    // hoist up any content before level 2 or level 3 headers
+    var children = page.children();
+    children.each(function(index) {
+      if ($(this).hasClass('level2') || $(this).hasClass('level3'))
+        return false;
+      $(this).insertBefore(page);
+    });
+
+    // determine orientation and fillPage behavior for distinct media
+    var orientation, fillPage, storyboard;
+
+    // media: mobile phone
+    if (isMobilePhone()) {
+
+      // if there is a sidebar we need to ensure it's content
+      // is properly framed as an h3
+      var sidebar = page.find('.section.sidebar');
+      sidebar.removeClass('sidebar');
+      sidebar.wrapInner('<div class="section level3"></div>');
+      var h2 = sidebar.find('h2');
+      var h3 = $('<h3></h3>');
+      h3.append(h2.contents());
+      h3.insertBefore(h2);
+      h2.detach();
+
+      // wipeout h2 elements then enclose them in a single h2
+      var level2 = page.find('div.section.level2');
+      level2.each(function() {
+        level2.children('h2').remove();
+        level2.children().unwrap();
+      });
+      page.wrapInner('<div class="section level2"></div>');
+
+      // substitute mobile images
+      if (isPortrait()) {
+        var mobileFigures = $('img.mobile-figure');
+        mobileFigures.each(function() {
+          // get the src (might be base64 encoded)
+          var src = $(this).attr('src');
+
+          // find it's peer
+          var id = $(this).attr('data-mobile-figure-id');
+          var img = $('img[data-figure-id=' + id + "]");
+          img.attr('src', src)
+             .attr('width', _options.defaultFigWidthMobile)
+             .attr('height', _options.defaultFigHeightMobile);
+        });
+      }
+
+      // hoist storyboard commentary into it's own section
+      if (page.hasClass('storyboard')) {
+        var commentaryHR = page.find('div.section.level3 hr');
+        commentaryHR.each(function() {
+          var commentary = $(this).nextAll().detach();
+          var commentarySection = $('<div class="section level3"></div>');
+          commentarySection.append(commentary);
+          commentarySection.insertAfter($(this).closest('div.section.level3'));
+          $(this).remove();
+        });
+      }
+
+      // force a non full screen layout by columns
+      orientation = _options.orientation = 'columns';
+      fillPage = _options.fillPage = false;
+      storyboard = _options.storyboard = false;
+
+    // media: desktop
+    } else {
+
+      // determine orientation
+      orientation = page.attr('data-orientation');
+      if (orientation !== 'rows' && orientation != 'columns')
+        orientation = _options.orientation;
+
+      // determine storyboard mode
+      storyboard = page.hasClass('storyboard');
+
+      // fillPage based on options (force for storyboard)
+      fillPage = _options.fillPage || storyboard;
+
+      // handle sidebar
+      var sidebar = page.find('.section.level2.sidebar');
+      if (sidebar.length > 0)
+        layoutSidebar(sidebar, page);
+    }
+
+    // give it and it's parent divs height: 100% if we are in fillPage mode
+    if (fillPage) {
+      page.addClass('vertical-layout-fill');
+      page.css('height', '100%');
+      page.parents('div').css('height', '100%');
+    } else {
+      page.addClass('vertical-layout-scroll');
+    }
+
+    // perform the layout
+    if (storyboard)
+      layoutPageAsStoryboard(page);
+    else if (orientation === 'rows')
+      layoutPageByRows(page, fillPage);
+    else if (orientation === 'columns')
+      layoutPageByColumns(page, fillPage);
+  }
+
+  function layoutSidebar(sidebar, content) {
+
+    // get it out of the header hierarchy
+    sidebar = sidebar.first();
+    if (sidebar.hasClass('level1')) {
+      sidebar.removeClass('level1');
+      sidebar.children('h1').remove();
+    } else if (sidebar.hasClass('level2')) {
+      sidebar.removeClass('level2');
+      sidebar.children('h2').remove();
+    }
+
+    // determine width
+    var sidebarWidth = isTablet() ? 220 : 250;
+    var dataWidth = parseInt(sidebar.attr('data-width'));
+    if (dataWidth)
+      sidebarWidth = dataWidth;
+
+    // set the width and shift the page right to accomodate the sidebar
+    sidebar.css('width', sidebarWidth + 'px');
+    content.css('padding-left', sidebarWidth + 'px');
+
+    // wrap it's contents in a form
+    sidebar.wrapInner($('<form></form>'));
+  }
+
+  function layoutPageAsStoryboard(page) {
+
+    // create storyboard navigation
+    var nav = $('<div class="storyboard-nav"></div>');
+
+    // add navigation buttons
+    var prev = $('<button class="sbprev"><i class="fa fa-angle-left"></i></button>');
+    nav.append(prev);
+    var next= $('<button class="sbnext"><i class="fa fa-angle-right"></i></button>');
+    nav.append(next);
+
+    // add navigation frame
+    var frameList = $('<div class="sbframelist"></div>');
+    nav.append(frameList);
+    var ul = $('<ul></ul>');
+    frameList.append(ul);
+
+     // find all the level3 sections (those are the storyboard frames)
+    var frames = page.find('div.section.level3');
+    frames.each(function() {
+
+      // mark it
+      $(this).addClass('sbframe');
+
+      // divide it into chart content and (optional) commentary
+      $(this).addClass('dashboard-column-orientation');
+
+      // stuff the chart into it's own div w/ flex
+      $(this).wrapInner('<div class="sbframe-component"></div>');
+      setFlex($(this), 1);
+      var frame = $(this).children('.sbframe-component');
+
+      // extract the title from the h3
+      var li = $('<li></li>');
+      var h3 = frame.children('h3');
+      li.append(h3.contents());
+      h3.detach();
+      ul.append(li);
+
+      // extract commentary
+      var hr = frame.children('hr');
+      if (hr.length) {
+        var commentary = hr.nextAll().detach();
+        hr.remove();
+        var commentaryFrame = $('<div class="sbframe-commentary"></div>');
+        commentaryFrame.addClass('flowing-content-shim');
+        commentaryFrame.addClass('flowing-content-container');
+        commentaryFrame.append(commentary);
+        $(this).append(commentaryFrame);
+
+        // look for a data-commentary-width attribute
+        var commentaryWidth = $(this).attr('data-commentary-width');
+        if (commentaryWidth)
+          commentaryFrame.css('width', commentaryWidth + 'px');
+      }
+
+      // layout the chart (force flex)
+      var result = layoutChart(frame, true);
+
+      // ice the notes if there are none
+      if (!result.notes)
+        frame.find('.chart-notes').remove();
+
+      // set flex on chart
+      setFlex(frame, 1);
+    });
+
+    // create a div to hold all the frames
+    var frameContent = $('<div class="sbframe-content"></div>');
+    frameContent.addClass('dashboard-row-orientation');
+    frameContent.append(frames.detach());
+
+    // row orientation to stack nav and frame content
+    page.addClass('dashboard-row-orientation');
+    page.append(nav);
+    page.append(frameContent);
+    setFlex(frameContent, 1);
+
+    // initialize sly
+    var sly = new Sly(frameList, {
+    		horizontal: true,
+    		itemNav: 'basic',
+    		smart: true,
+    		activateOn: 'click',
+    		startAt: 0,
+    		scrollBy: 1,
+    		activatePageOn: 'click',
+    		speed: 200,
+    		moveBy: 600,
+    		dragHandle: true,
+    		dynamicHandle: true,
+    		clickBar: true,
+    		keyboardNavBy: 'items',
+    		next: next,
+    		prev: prev
+    	}).init();
+
+    // make first frame active
+    frames.removeClass('active');
+    frames.first().addClass('active');
+
+    // subscribe to frame changed events
+    sly.on('active', function (eventName, itemIndex) {
+      frames.removeClass('active');
+      frames.eq(itemIndex).addClass('active')
+                          .trigger('shown');
+    });
+  }
+
+  function layoutPageByRows(page, fillPage) {
+
+    // row orientation
+    page.addClass('dashboard-row-orientation');
+
+    // find all the level2 sections (those are the rows)
+    var rows = page.find('div.section.level2');
+
+    // if there are no level2 sections then treat the
+    // entire page as if it's a level 2 section
+    if (rows.length === 0) {
+      page.wrapInner('<div class="section level2"></div>');
+      rows = page.find('div.section.level2');
+    }
+
+    rows.each(function () {
+
+      // flags
+      var haveNotes = false;
+      var haveFlexHeight = true;
+
+      // remove the h2
+      $(this).children('h2').remove();
+
+      // check for a tabset
+      var isTabset = $(this).hasClass('tabset');
+      if (isTabset)
+        layoutTabset($(this));
+
+      // give it row layout semantics if it's not a tabset
+      if (!isTabset)
+        $(this).addClass('dashboard-row');
+
+      // find all of the level 3 subheads
+      var columns = $(this).find('div.section.level3');
+
+      // determine figureSizes sizes
+      var figureSizes = chartFigureSizes(columns);
+
+      // fixup the columns
+      columns.each(function(index) {
+
+        // layout the chart (force flex if we are in a tabset)
+        var result = layoutChart($(this), isTabset);
+
+        // update flexHeight state
+        if (!result.flex)
+          haveFlexHeight = false;
+
+        // update state
+        if (result.notes)
+          haveNotes = true;
+
+        // set the column flex based on the figure width
+        // (value boxes will just get the default figure width)
+        var chartWidth = figureSizes[index].width;
+        setFlex($(this), chartWidth + ' ' + chartWidth + ' 0px');
+
+      });
+
+      // remove empty chart note divs
+      if (isTabset)
+        $(this).find('.chart-notes').filter(function() {
+            return $(this).html() === "&nbsp;";
+        }).remove();
+      if (!haveNotes)
+        $(this).find('.chart-notes').remove();
+
+       // make it a flexbox row
+      if (haveFlexHeight)
+        $(this).addClass('dashboard-row-flex');
+
+      // now we can set the height on all the wrappers (based on maximum
+      // figure height + room for title and notes, or data-height on the
+      // container if specified). However, don't do this if there is
+      // no flex on any of the constituent columns
+      var flexHeight = null;
+      var dataHeight = parseInt($(this).attr('data-height'));
+      if (dataHeight)
+        flexHeight = adjustedHeight(dataHeight, columns.first());
+      else if (haveFlexHeight)
+        flexHeight = maxChartHeight(figureSizes, columns);
+      if (flexHeight) {
+        if (fillPage)
+          setFlex($(this), flexHeight + ' ' + flexHeight + ' 0px');
+        else {
+          $(this).css('height', flexHeight + 'px');
+          setFlex($(this), '0 0 ' + flexHeight + 'px');
+        }
+      }
+
+    });
+  }
+
+  function layoutPageByColumns(page, fillPage) {
+
+    // column orientation
+    page.addClass('dashboard-column-orientation');
+
+    // find all the level2 sections (those are the columns)
+    var columns = page.find('div.section.level2');
+
+    // if there are no level2 sections then treat the
+    // entire page as if it's a level 2 section
+    if (columns.length === 0) {
+      page.wrapInner('<div class="section level2"></div>');
+      columns = page.find('div.section.level2');
+    }
+
+    // layout each column
+    columns.each(function (index) {
+
+      // remove the h2
+      $(this).children('h2').remove();
+
+      // make it a flexbox column
+      $(this).addClass('dashboard-column');
+
+      // check for a tabset
+      var isTabset = $(this).hasClass('tabset');
+      if (isTabset)
+        layoutTabset($(this));
+
+      // find all the h3 elements
+      var rows = $(this).find('div.section.level3');
+
+      // get the figure sizes for the rows
+      var figureSizes = chartFigureSizes(rows);
+
+      // column flex is the max row width (or data-width if specified)
+      var flexWidth;
+      var dataWidth = parseInt($(this).attr('data-width'));
+      if (dataWidth)
+        flexWidth = dataWidth;
+      else
+        flexWidth = maxChartWidth(figureSizes);
+      setFlex($(this), flexWidth + ' ' + flexWidth + ' 0px');
+
+      // layout each chart
+      rows.each(function(index) {
+
+        // perform the layout
+        var result = layoutChart($(this), false);
+
+        // ice the notes if there are none
+        if (!result.notes)
+          $(this).find('.chart-notes').remove();
+
+        // set flex height based on figHeight, then adjust
+        if (result.flex) {
+          var chartHeight = figureSizes[index].height;
+          chartHeight = adjustedHeight(chartHeight, $(this));
+          if (fillPage)
+            setFlex($(this), chartHeight + ' ' + chartHeight + ' 0px');
+          else {
+            $(this).css('height', chartHeight + 'px');
+            setFlex($(this), chartHeight + ' ' + chartHeight + ' ' + chartHeight + 'px');
+          }
+        }
+      });
+    });
+  }
+
+  function chartFigureSizes(charts) {
+
+    // sizes
+    var figureSizes = new Array(charts.length);
+
+    // check each chart
+    charts.each(function(index) {
+
+      // start with default
+      figureSizes[index] = {
+        width: _options.defaultFigWidth,
+        height: _options.defaultFigHeight
+      };
+
+      // look for data-height or data-width then knit options
+      var dataWidth = parseInt($(this).attr('data-width'));
+      var dataHeight = parseInt($(this).attr('data-height'));
+      var knitrOptions = $(this).find('.knitr-options:first');
+      var knitrWidth, knitrHeight;
+      if (knitrOptions) {
+        knitrWidth = parseInt(knitrOptions.attr('data-fig-width'));
+        knitrHeight =  parseInt(knitrOptions.attr('data-fig-height'));
+      }
+
+      // width
+      if (dataWidth)
+        figureSizes[index].width = dataWidth;
+      else if (knitrWidth)
+        figureSizes[index].width = knitrWidth;
+
+      // height
+      if (dataHeight)
+        figureSizes[index].height = dataHeight;
+      else if (knitrHeight)
+        figureSizes[index].height = knitrHeight;
+    });
+
+    // return sizes
+    return figureSizes;
+  }
+
+  function maxChartHeight(figureSizes, charts) {
+
+    // first compute the maximum height
+    var maxHeight = _options.defaultFigHeight;
+    for (var i = 0; i<figureSizes.length; i++)
+      if (figureSizes[i].height > maxHeight)
+        maxHeight = figureSizes[i].height;
+
+    // now add offests for chart title and chart notes
+    if (charts.length)
+      maxHeight = adjustedHeight(maxHeight, charts.first());
+
+    return maxHeight;
+  }
+
+  function adjustedHeight(height, chart) {
+    if (chart.length > 0) {
+      var chartTitle = chart.find('.chart-title');
+      if (chartTitle.length)
+        height += chartTitle.first().outerHeight();
+      var chartNotes = chart.find('.chart-notes');
+      if (chartNotes.length)
+        height += chartNotes.first().outerHeight();
+    }
+    return height;
+  }
+
+  function maxChartWidth(figureSizes) {
+    var maxWidth = _options.defaultFigWidth;
+    for (var i = 0; i<figureSizes.length; i++)
+      if (figureSizes[i].width > maxWidth)
+        maxWidth = figureSizes[i].width;
+    return maxWidth;
+  }
+
+  // layout a chart
+  function layoutChart(chart, forceFlex) {
+
+    // state to return
+    var result = {
+      notes: false,
+      flex: false
+    };
+
+    // extract the title
+    var title = extractTitle(chart);
+
+    // find components that apply to this container
+    var components = componentsFind(chart);
+
+    // if it's a custom component then call it and return
+    var customComponents = componentsCustom(components);
+    if (customComponents.length) {
+      componentsLayout(customComponents, title, chart);
+      result.notes = false;
+      result.flex = forceFlex || componentsFlex(customComponents);
+      return result;
+    }
+
+    // put all the content in a chart wrapper div
+    chart.addClass('chart-wrapper');
+    chart.wrapInner('<div class="chart-stage"></div>');
+    var chartContent = chart.children('.chart-stage');
+
+    // flex the content if appropriate
+    result.flex = forceFlex || componentsFlex(components);
+    if (result.flex) {
+      // add flex classes
+      chart.addClass('chart-wrapper-flex');
+      chartContent.addClass('chart-stage-flex');
+
+      // additional shim to break out of flexbox sizing
+      chartContent.wrapInner('<div class="chart-shim"></div>');
+      chartContent = chartContent.children('.chart-shim');
+    }
+
+    // set custom data-padding attribute
+    var pad = chart.attr('data-padding');
+    if (pad) {
+      if (pad === "0")
+        chart.addClass('no-padding');
+      else {
+        pad = pad + 'px';
+        chartContent.css('left', pad)
+                    .css('top', pad)
+                    .css('right', pad)
+                    .css('bottom', pad)
+      }
+    }
+
+    // call compoents
+    componentsLayout(components, title, chartContent);
+
+    // also activate components on shiny output
+    findShinyOutput(chartContent).on('shiny:value',
+      function(event) {
+        var element = $(event.target);
+        setTimeout(function() {
+
+          // see if we opted out of flex based on our output (for shiny
+          // we can't tell what type of output we have until after the
+          // value is bound)
+          var components = componentsFind(element);
+          var flex = forceFlex || componentsFlex(components);
+          if (!flex) {
+            chart.css('height', "");
+            setFlex(chart, "");
+            chart.removeClass('chart-wrapper-flex');
+            chartContent.removeClass('chart-stage-flex');
+            chartContent.children().unwrap();
+          }
+
+          // perform layout
+          componentsLayout(components, title, element.parent());
+        }, 10);
+      });
+
+    // add the title
+    var chartTitle = $('<div class="chart-title"></div>');
+    chartTitle.append(title);
+    chart.prepend(chartTitle);
+
+    // add the notes section
+    var chartNotes = $('<div class="chart-notes"></div>');
+    chartNotes.html('&nbsp;');
+    chart.append(chartNotes);
+
+    // attempt to extract notes if we have a component
+    if (components.length)
+      result.notes = extractChartNotes(chartContent, chartNotes);
+
+    // return result
+    return result;
+  }
+
+  // build a tabset from a section div with the .tabset class
+  function layoutTabset(tabset) {
+
+    // check for fade option
+    var fade = tabset.hasClass("tabset-fade");
+    var pills = tabset.hasClass("tabset-pills");
+    var navClass = pills ? "nav-pills" : "nav-tabs";
+
+    // determine the heading level of the tabset and tabs
+    var match = tabset.attr('class').match(/level(\d) /);
+    if (match === null)
+      return;
+    var tabsetLevel = Number(match[1]);
+    var tabLevel = tabsetLevel + 1;
+
+    // find all subheadings immediately below
+    var tabs = tabset.find("div.section.level" + tabLevel);
+    if (!tabs.length)
+      return;
+
+    // create tablist and tab-content elements
+    var tabList = $('<ul class="nav ' + navClass + '" role="tablist"></ul>');
+    $(tabs[0]).before(tabList);
+    var tabContent = $('<div class="tab-content"></div>');
+    $(tabs[0]).before(tabContent);
+
+    // build the tabset
+    var activeTab = 0;
+    tabs.each(function(i) {
+
+      // get the tab div
+      var tab = $(tabs[i]);
+
+      // get the id then sanitize it for use with bootstrap tabs
+      var id = tab.attr('id');
+
+      // see if this is marked as the active tab
+      if (tab.hasClass('active'))
+        activeTab = i;
+
+      // sanitize the id for use with bootstrap tabs
+      id = id.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_');
+      tab.attr('id', id);
+
+      // get the heading element within it and grab it's text
+      var heading = tab.find('h' + tabLevel + ':first');
+      var headingDom = heading.contents();
+
+      // build and append the tab list item
+      var a = $('<a role="tab" data-toggle="tab" data-bs-toggle="tab" class="nav-link"></a>');
+      a.append(headingDom);
+      a.attr('href', '#' + id);
+      a.attr('aria-controls', id);
+      var li = $('<li role="presentation" class="nav-item"></li>');
+      li.append(a);
+      tabList.append(li);
+
+      // set it's attributes
+      tab.attr('role', 'tabpanel');
+      tab.addClass('tab-pane');
+      tab.addClass('tabbed-pane');
+      tab.addClass('no-title');
+      if (fade)
+        tab.addClass('fade');
+
+      // move it into the tab content div
+      tab.detach().appendTo(tabContent);
+    });
+
+    // set active tab
+    $(tabList.children()[activeTab]).tab("show");
+    var active = $(tabContent.children('div.section')[activeTab]);
+    active.addClass('active');
+    if (fade)
+      active.addClass('in');
+
+    // add nav-tabs-custom
+    tabset.addClass('nav-tabs-custom');
+
+    // internal layout is dashboard-column with tab-content flexing
+    tabset.addClass('dashboard-column');
+    setFlex(tabContent, 1);
+  }
+
+  // one time global initialization for components
+  function componentsInit(dashboardContainer) {
+    for (var i=0; i<window.FlexDashboardComponents.length; i++) {
+      var component = window.FlexDashboardComponents[i];
+      if (component.init)
+        component.init(dashboardContainer);
+    }
+  }
+
+  // find components that apply within a container
+  function componentsFind(container) {
+
+    // look for components
+    var components = [];
+    for (var i=0; i<window.FlexDashboardComponents.length; i++) {
+      var component = window.FlexDashboardComponents[i];
+      if (component.find(container).length)
+        components.push(component);
+    }
+
+    // if there were none then use a special flowing content component
+    // that just adds a scrollbar in fillPage mode
+    if (components.length == 0) {
+      components.push({
+        find: function(container) {
+          return container;
+        },
+
+        flex: function(fillPage) {
+          return fillPage;
+        },
+
+        layout: function(title, container, element, fillPage) {
+          if (fillPage) {
+            container.addClass('flowing-content-shim');
+            container.addClass('flowing-content-container');
+          }
+        }
+      });
+    }
+
+    return components;
+  }
+
+  // if there is a custom component then pick it out
+  function componentsCustom(components) {
+    var customComponent = [];
+    for (var i=0; i<components.length; i++)
+      if (components[i].type === "custom") {
+        customComponent.push(components[i]);
+        break;
+      }
+    return customComponent;
+  }
+
+  // query all components for flex
+  function componentsFlex(components) {
+
+    // no components at all means no flex
+    if (components.length === 0)
+      return false;
+
+    // otherwise query components (assume true unless we see false)
+    var isMobile = isMobilePhone();
+    for (var i=0; i<components.length; i++)
+      if (components[i].flex && !components[i].flex(_options.fillPage))
+        return false;
+    return true;
+  }
+
+  // layout all components
+  function componentsLayout(components, title, container) {
+    var isMobile = isMobilePhone();
+    for (var i=0; i<components.length; i++) {
+      var element = components[i].find(container);
+      if (components[i].layout) {
+        // call layout (don't call other components if it returns false)
+        var result = components[i].layout(title, container, element, _options.fillPage);
+        if (result === false)
+          return;
+      }
+    }
+  }
+
+  // get a reference to the h3, discover it's inner html, and remove it
+  function extractTitle(container) {
+    var h3 = container.children('h3').first();
+    var title = '';
+    if (!container.hasClass('no-title'))
+      title = h3.contents();
+    h3.detach();
+    return title;
+  }
+
+  // extract chart notes
+  function extractChartNotes(chartContent, chartNotes) {
+    // look for a terminating blockquote or image caption
+    var blockquote = chartContent.children('blockquote:last-child');
+    var caption = chartContent.children('div.image-container')
+                              .children('p.caption');
+    if (blockquote.length) {
+      chartNotes.empty().append(blockquote.children('p:first-child').contents());
+      blockquote.remove();
+      return true;
+    } else if (caption.length) {
+      chartNotes.empty().append(caption.contents());
+      caption.remove();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function findShinyOutput(chartContent) {
+    return chartContent.find('.shiny-text-output, .shiny-html-output');
+  }
+
+  // safely detect rendering on a mobile phone
+  function isMobilePhone() {
+    try
+    {
+      return ! window.matchMedia("only screen and (min-width: 768px)").matches;
+    }
+    catch(e) {
+      return false;
+    }
+  }
+
+  function isFillPage() {
+    return _options.fillPage;
+  }
+
+  // detect portrait mode
+  function isPortrait() {
+    return ($(window).width() < $(window).height());
+  }
+
+  // safely detect rendering on a tablet
+  function isTablet() {
+    try
+    {
+      return window.matchMedia("only screen and (min-width: 769px) and (max-width: 992px)").matches;
+    }
+    catch(e) {
+      return false;
+    }
+  }
+
+  // test whether this is a shiny doc
+  function isShinyDoc() {
+    return (typeof(window.Shiny) !== "undefined" && !!window.Shiny.outputBindings);
+  }
+
+  // set flex using vendor specific prefixes
+  function setFlex(el, flex) {
+    el.css('-webkit-box-flex', flex)
+      .css('-webkit-flex', flex)
+      .css('-ms-flex', flex)
+      .css('flex', flex);
+  }
+
+  // support bookmarking of pages
+  function handleLocationHash() {
+
+    // restore tab/page from bookmark
+    var hash = window.decodeURIComponent(window.location.hash);
+    if (hash.length > 0) {
+      // Update the tab without .showPage() so that we don't change page history
+      $('ul.nav a[href="' + hash + '"]').tab('show');
+    }
+
+    // navigate to a tab when the history changes
+    window.addEventListener("popstate", function(e) {
+      var hash = window.decodeURIComponent(window.location.hash);
+      var activeTab = $('ul.nav a[href="' + hash + '"]');
+      if (activeTab.length) {
+        activeTab.tab('show');
+      } else {
+        // returning to the base page URL without a hash activates first tab
+        $('ul.nav a:first').tab('show');
+      }
+    });
+
+    // add a hash to the URL when the user clicks on a tab/page
+    $('.navbar-nav a[data-toggle="tab"]').on('click', function(e) {
+      var baseUrl = FlexDashboardUtils.urlWithoutHash(window.location.href);
+      var hash = FlexDashboardUtils.urlHash($(this).attr('href'));
+      var href = baseUrl + hash;
+      FlexDashboardUtils.setLocation(href);
+    });
+
+    // handle clicks of other links that should activate pages
+    var navPages = $('ul.navbar-nav li a[data-toggle=tab]');
+    navPages.each(function() {
+      var href =  $(this).attr('href');
+      var links = $('a[href="' + href + '"][data-toggle!=tab]');
+      links.each(function() {
+        $(this).on('click', function(e) {
+          window.FlexDashboardUtils.showPage(href);
+        });
+      });
+    });
+  }
+
+  // tweak Prism highlighting
+  function initPrismHighlighting() {
+
+    if (window.Prism) {
+      Prism.languages.insertBefore('r', 'comment', {
+        'heading': [
+          {
+            // title 1
+        	  // =======
+
+        	  // title 2
+        	  // -------
+        	  pattern: /\w+.*(?:\r?\n|\r)(?:====+|----+)/,
+            alias: 'operator'
+          },
+          {
+            // ### title 3
+            pattern: /(^\s*)###[^#].+/m,
+            lookbehind: true,
+            alias: 'operator'
+          }
+        ]
+      });
+
+      // prism highlight
+      Prism.highlightAll();
+    }
+  }
+
+  FlexDashboard.prototype = {
+    constructor: FlexDashboard,
+    init: init,
+    isMobilePhone: isMobilePhone,
+    isFillPage: isFillPage
+  };
+
+  return FlexDashboard;
+
+})();
+
+// utils
+window.FlexDashboardUtils = {
+  resizableImage: function(img) {
+    var src = img.attr('src');
+    var url = 'url("' + src + '")';
+    img.parent().css('background', url)
+                .css('background-size', 'contain')
+                .css('background-repeat', 'no-repeat')
+                .css('background-position', 'center')
+                .addClass('image-container');
+  },
+  setLocation: function(href) {
+    if (history && history.pushState) {
+      history.pushState(null, null, href);
+    } else {
+      window.location.replace(href);
+    }
+    setTimeout(function() {
+        window.scrollTo(0, 0);
+    }, 10);
+  },
+  showPage: function(href) {
+    $('ul.navbar-nav li a[href="' + href + '"]').tab('show');
+    var baseUrl = this.urlWithoutHash(window.location.href);
+    var loc = baseUrl + href;
+    this.setLocation(loc);
+  },
+  showLinkedValue: function(href) {
+    // check for a page link
+    if ($('ul.navbar-nav li a[data-toggle=tab][href="' + href + '"]').length > 0)
+      this.showPage(href);
+    else
+      window.open(href);
+  },
+  urlWithoutHash: function(url) {
+    var hashLoc = url.indexOf('#');
+    if (hashLoc != -1)
+      return url.substring(0, hashLoc);
+    else
+      return url;
+  },
+  urlHash: function(url) {
+    var hashLoc = url.indexOf('#');
+    if (hashLoc != -1)
+      return url.substring(hashLoc);
+    else
+      return "";
+  }
+};
+
+window.FlexDashboard = new FlexDashboard();
+
+// empty content
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    if (container.find('p').length == 0)
+      return container;
+    else
+      return $();
+  }
+})
+
+// plot image
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('p')
+                    .children('img:only-child');
+  },
+
+  layout: function(title, container, element, fillPage) {
+    FlexDashboardUtils.resizableImage(element);
+  }
+});
+
+// plot image (figure style)
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('div.figure').children('img');
+  },
+
+  layout: function(title, container, element, fillPage) {
+    FlexDashboardUtils.resizableImage(element);
+  }
+});
+
+// htmlwidget
+window.FlexDashboardComponents.push({
+
+  init: function(dashboardContainer) {
+    // trigger "shown" after initial layout to force static htmlwidgets
+    // in runtime: shiny to be resized after the dom has been transformed
+    dashboardContainer.on('flexdashboard:layoutcomplete', function(event) {
+      setTimeout(function() {
+        dashboardContainer.trigger('shown');
+      }, 200);
+    });
+  },
+
+  find: function(container) {
+    return container.children('div[id^="htmlwidget-"],div.html-widget');
+  }
+});
+
+// gauge
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('div.html-widget.gauge');
+  },
+
+  flex: function(fillPage) {
+    return false;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+
+  }
+
+});
+
+// shiny output
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    return container.children('div[class^="shiny-"]');
+  }
+});
+
+// bootstrap table
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    var bsTable = container.find('table.table');
+    if (bsTable.length !== 0)
+      return bsTable;
+    else
+      return container.find('tr.header').parent('thead').parent('table');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+    // alias variables
+    var bsTable = element;
+
+    // fixup xtable generated tables with a proper thead
+    var headerRow = bsTable.find('tbody > tr:first-child > th').parent();
+    if (headerRow.length > 0) {
+      var thead = $('<thead></thead>');
+      bsTable.prepend(thead);
+      headerRow.detach().appendTo(thead);
+    }
+
+    // improve appearance
+    container.addClass('bootstrap-table');
+
+    // for fill page provide scrolling w/ sticky headers
+    if (fillPage) {
+      // force scrollbar on overflow
+      container.addClass('flowing-content-shim');
+
+      // stable table headers when scrolling
+      bsTable.stickyTableHeaders({
+        scrollableArea: container
+      });
+    }
+  }
+});
+
+// embedded shiny app
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.find('iframe.shiny-frame');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+    if (fillPage) {
+      element.attr('height', '100%');
+    } else {
+      // provide default height if necessary
+      var height = element.get(0).style.height;
+      if (!height)
+        height = element.attr('height');
+      if (!height)
+        element.attr('height', 500);
+    }
+  }
+});
+
+// shiny fillRow or fillCol
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.find('.flexfill-container');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+    if (fillPage)
+      element.css('height', '100%');
+    else {
+      // provide default height if necessary
+      var height = element.get(0).style.height;
+      if (height === "100%" || height === "auto" || height === "initial" ||
+          height === "inherit" || !height) {
+        element.css('height', 500);
+      }
+    }
+  }
+});
+
+// valueBox
+window.FlexDashboardComponents.push({
+
+  type: "custom",
+
+  find: function(container) {
+    if (container.find('span.value-output, .shiny-valuebox-output').length)
+      return container;
+    else
+      return $();
+  },
+
+  flex: function(fillPage) {
+    return false;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+    // alias variables
+    var chartTitle = title;
+    var valueBox = element;
+
+    // add value-box class to container
+    container.addClass('value-box');
+
+    // value paragraph
+    var value = $('<p class="value"></p>');
+
+    // if we have shiny-text-output then just move it in
+    var valueOutputSpan = [];
+    var shinyOutput = valueBox.find('.shiny-valuebox-output').detach();
+    if (shinyOutput.length) {
+      valueBox.children().remove();
+      shinyOutput.html("&mdash;");
+      value.append(shinyOutput);
+    } else {
+      // extract the value (remove leading vector index)
+      var chartValue = valueBox.text().trim();
+      chartValue = chartValue.replace("[1] ", "");
+      valueOutputSpan = valueBox.find('span.value-output').detach();
+      valueBox.children().remove();
+      value.text(chartValue);
+    }
+
+    // caption
+    var caption = $('<p class="caption"></p>');
+    caption.append(chartTitle);
+
+    // build inner div for value box and add it
+    var inner = $('<div class="inner"></div>');
+    inner.append(value);
+    inner.append(caption);
+    valueBox.append(inner);
+
+    // add icon if specified
+    var icon = $('<div class="icon"><i></i></div>');
+    valueBox.append(icon);
+    function setIcon(chartIcon) {
+      var iconLib = "";
+      var iconSplit = chartIcon.split(" ");
+      if (iconSplit.length > 1) {
+        iconLib = iconSplit[0];
+        chartIcon = iconSplit.slice(1).join(" ");
+      } else {
+        var components = chartIcon.split("-");
+        if (components.length > 1)
+          iconLib = components[0];
+      }
+      icon.children('i').attr('class', iconLib + ' ' + chartIcon);
+    }
+    var chartIcon = valueBox.attr('data-icon');
+    if (chartIcon)
+      setIcon(chartIcon);
+
+    // handle data attributes in valueOutputSpan
+    function handleValueOutput(valueOutput) {
+
+      // caption
+      var dataCaption = valueOutput.attr('data-caption');
+      if (dataCaption)
+        caption.html(dataCaption);
+
+      // icon
+      var dataIcon = valueOutput.attr('data-icon');
+      if (dataIcon)
+        setIcon(dataIcon);
+
+      // If valueBox(color=) was an accent color, this attr should
+      // be populated with the accent color and the relevant CSS comes
+      // in through HTML dependencies
+      var dataColorAccent = valueOutput.attr('data-color-accent');
+      var valueBoxClasses = "value-box-" + (["primary", "info", "danger", "warning", "success"].join(" value-box-"));
+      if (dataColorAccent) {
+        valueBox.removeClass(valueBoxClasses);
+        valueBox.addClass('value-box-' + dataColorAccent);
+      }
+
+      // If valueBox(color=) was a CSS color, these other data-color-*
+      // attrs will be populated
+      var dataColor = valueOutput.attr('data-color');
+      if (dataColor) {
+        valueBox.removeClass(valueBoxClasses);
+        valueBox.css('background-color', dataColor);
+      }
+      var dataColorText = valueOutput.attr('data-color-text');
+      if (dataColorText) {
+        valueBox.find(".inner").css('color', dataColorText);
+      }
+      var dataColorIcon = valueOutput.attr('data-color-icon');
+      if (dataColorIcon) {
+        valueBox.find(".icon").css('color', dataColorIcon);
+      }
+
+      // url
+      var dataHref = valueOutput.attr('data-href');
+      if (dataHref) {
+        valueBox.addClass('linked-value');
+        valueBox.off('click.value-box');
+        valueBox.on('click.value-box', function(e) {
+          window.FlexDashboardUtils.showLinkedValue(dataHref);
+        });
+      }
+    }
+
+    // check for a valueOutputSpan
+    if (valueOutputSpan.length > 0) {
+      handleValueOutput(valueOutputSpan);
+    }
+
+    // if we have a shinyOutput then bind a listener to handle
+    // new valueOutputSpan values
+    shinyOutput.on('shiny:value',
+      function(event) {
+        var element = $(event.target);
+        setTimeout(function() {
+          var valueOutputSpan = element.find('span.value-output');
+          if (valueOutputSpan.length > 0)
+            handleValueOutput(valueOutputSpan);
+        }, 10);
+      }
+    );
+  }
+});
+</script>
+
+<div id="dashboard-container">
+
+<div id="introduction" class="section level1 tabset">
+<h1 class="tabset">1. INTRODUCTION</h1>
+<p>This dashboard presents an in-depth analysis of two original tracks I
+created as part of my musicology coursework. The first, angelo-w-1, is a
+generative ambient composition built using modular synthesis and field
+recordings, while the second, angelo-w-2, blends jungle rhythms,
+vaporwave textures, and live guitar into a more structured yet
+atmospheric piece.</p>
+<p>Rather than simply describing these tracks in terms of genre or mood,
+I wanted to explore how they behave across multiple musical dimensions.
+Using computational tools, I examined features such as chroma, timbre,
+tempo, energy, and harmonic structure, comparing the two tracks to each
+other and to a larger corpus of student and AI-generated music.</p>
+<p>The goal of this project is not just to map out technical traits, but
+to reflect on how creative choices manifest in sound and how structure
+can emerge even in music built on spontaneity or abstraction. By
+translating intuition into measurable patterns, this analysis opens up
+new ways of thinking about form, process, and musical identity.</p>
+</div>
+<div id="my-tracks" class="section level1 tabset">
+<h1 class="tabset">2. MY TRACKS</h1>
+<div id="section" class="section level3">
+<h3></h3>
+<p>angelo-w-1.wav</p>
+<p>I created this track using a generative drone patch in VCV Rack
+alongside Seqsual’s RSVP sampler on my iPad. The sound sources include
+recordings from my childhood living room in Aruba, such as my dad’s
+keys, table scratches, and tapping sounds. RSVP’s random sample player
+generated evolving textures with these recordings while I shaped the
+sound by manipulating an LFO and adjusting the frequency, timbre, morph,
+and harmonics on VCV’s macro oscillator. This excerpt is taken from an
+11-minute live jam.</p>
+</div>
+<div id="section-1" class="section level3">
+<h3></h3>
+<p>angelo-w-2.wav</p>
+<p>This demo was made in FL Studio using my electric guitar, jungle
+samples, ambient pads, and an orchestral lead. I aimed to blend elements
+of jungle, rock, and vaporwave, drawing inspiration from George
+Clanton’s music. I layered heavy reverb across the track to create a
+hazy, atmospheric sound.</p>
+</div>
+</div>
+<div id="track-features-vs-corpus-vs-clustering"
+class="section level1 storyboard">
+<h1 class="storyboard">3. TRACK FEATURES VS CORPUS VS CLUSTERING</h1>
+<div id="track-features-analysis" class="section level3 tabset">
+<h3 class="tabset">TRACK FEATURES ANALYSIS</h3>
+<p>In this section, I’m looking at a plot to see how my two tracks
+relate to the rest of the corpus using tempo, danceability, arousal, and
+instrumentalness. These features give a good idea of the vibe, rhythm,
+and structure of each track. My tracks are highlighted in red so it’s
+easier to spot them in the full dataset. After this, I’ll use clustering
+to see how this visual space translates into actual groupings — and
+whether the tracks that are close together in the plot also end up in
+similar clusters or share sonic or structural traits.</p>
+</div>
+<div id="class-corpus" class="section level3 tabset">
+<h3 class="tabset">CLASS CORPUS</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<hr />
+<p>In this section, I visualize how my two tracks relate to the broader
+class corpus by plotting tempo against danceability, with arousal
+represented by point size. The tracks are marked in red to highlight
+their position in the dataset. Both tracks sit within the higher tempo
+range, between roughly 135 and 160 BPM. This is interesting when
+contrasted with their ambient and genre-blending characteristics,
+suggesting that a faster tempo does not always equate to high energy in
+the traditional sense. Their danceability values hover around 0.6 to
+0.7, which implies that, despite their experimental nature, the tracks
+maintain a degree of rhythmic cohesion or pulse-like structure. The
+smaller point size, which reflects lower arousal, further aligns with
+the tracks’ atmospheric and subdued qualities. Importantly, neither
+track appears as an extreme outlier. Instead, they fall within a dense
+region of the corpus, suggesting a surprising overlap in measurable
+audio features, even if the artistic intent or sonic result is quite
+distinct. This observation raises the question of whether these
+perceived similarities carry over into the clustering analysis that
+follows.</p>
+</div>
+<div id="hierarchical-clustering" class="section level3 tabset">
+<h3 class="tabset">HIERARCHICAL CLUSTERING</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" width="576" data-figure-id=fig1 /></p>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-add5a5eca6bbbc8b6c0c" style="width:576px;height:460.8px;"></div>
+<script type="application/json" data-for="htmlwidget-add5a5eca6bbbc8b6c0c">{"x":{"data":[{"x":[16.41455078125,1.75,null,1.75,1.75,null,16.41455078125,31.0791015625,null,31.0791015625,31.0791015625,null,1.75,1,null,1,1,null,1.75,2.5,null,2.5,2.5,null,2.5,2,null,2,2,null,2.5,3,null,3,3,null,31.0791015625,9.2109375,null,9.2109375,9.2109375,null,31.0791015625,52.947265625,null,52.947265625,52.947265625,null,9.2109375,4.75,null,4.75,4.75,null,9.2109375,13.671875,null,13.671875,13.671875,null,4.75,4,null,4,4,null,4.75,5.5,null,5.5,5.5,null,5.5,5,null,5,5,null,5.5,6,null,6,6,null,13.671875,8.65625,null,8.65625,8.65625,null,13.671875,18.6875,null,18.6875,18.6875,null,8.65625,7,null,7,7,null,8.65625,10.3125,null,10.3125,10.3125,null,10.3125,8.75,null,8.75,8.75,null,10.3125,11.875,null,11.875,11.875,null,8.75,8,null,8,8,null,8.75,9.5,null,9.5,9.5,null,9.5,9,null,9,9,null,9.5,10,null,10,10,null,11.875,11,null,11,11,null,11.875,12.75,null,12.75,12.75,null,12.75,12,null,12,12,null,12.75,13.5,null,13.5,13.5,null,13.5,13,null,13,13,null,13.5,14,null,14,14,null,18.6875,16.625,null,16.625,16.625,null,18.6875,20.75,null,20.75,20.75,null,16.625,15.5,null,15.5,15.5,null,16.625,17.75,null,17.75,17.75,null,15.5,15,null,15,15,null,15.5,16,null,16,16,null,17.75,17,null,17,17,null,17.75,18.5,null,18.5,18.5,null,18.5,18,null,18,18,null,18.5,19,null,19,19,null,20.75,20,null,20,20,null,20.75,21.5,null,21.5,21.5,null,21.5,21,null,21,21,null,21.5,22,null,22,22,null,52.947265625,31.40234375,null,31.40234375,31.40234375,null,52.947265625,74.4921875,null,74.4921875,74.4921875,null,31.40234375,24.3125,null,24.3125,24.3125,null,31.40234375,38.4921875,null,38.4921875,38.4921875,null,24.3125,23,null,23,23,null,24.3125,25.625,null,25.625,25.625,null,25.625,24.5,null,24.5,24.5,null,25.625,26.75,null,26.75,26.75,null,24.5,24,null,24,24,null,24.5,25,null,25,25,null,26.75,26,null,26,26,null,26.75,27.5,null,27.5,27.5,null,27.5,27,null,27,27,null,27.5,28,null,28,28,null,38.4921875,33.40625,null,33.40625,33.40625,null,38.4921875,43.578125,null,43.578125,43.578125,null,33.40625,31.125,null,31.125,31.125,null,33.40625,35.6875,null,35.6875,35.6875,null,31.125,29.75,null,29.75,29.75,null,31.125,32.5,null,32.5,32.5,null,29.75,29,null,29,29,null,29.75,30.5,null,30.5,30.5,null,30.5,30,null,30,30,null,30.5,31,null,31,31,null,32.5,32,null,32,32,null,32.5,33,null,33,33,null,35.6875,34.5,null,34.5,34.5,null,35.6875,36.875,null,36.875,36.875,null,34.5,34,null,34,34,null,34.5,35,null,35,35,null,36.875,36,null,36,36,null,36.875,37.75,null,37.75,37.75,null,37.75,37,null,37,37,null,37.75,38.5,null,38.5,38.5,null,38.5,38,null,38,38,null,38.5,39,null,39,39,null,43.578125,40.5,null,40.5,40.5,null,43.578125,46.65625,null,46.65625,46.65625,null,40.5,40,null,40,40,null,40.5,41,null,41,41,null,46.65625,43.3125,null,43.3125,43.3125,null,46.65625,50,null,50,50,null,43.3125,42,null,42,42,null,43.3125,44.625,null,44.625,44.625,null,44.625,43.5,null,43.5,43.5,null,44.625,45.75,null,45.75,45.75,null,43.5,43,null,43,43,null,43.5,44,null,44,44,null,45.75,45,null,45,45,null,45.75,46.5,null,46.5,46.5,null,46.5,46,null,46,46,null,46.5,47,null,47,47,null,50,48.5,null,48.5,48.5,null,50,51.5,null,51.5,51.5,null,48.5,48,null,48,48,null,48.5,49,null,49,49,null,51.5,50,null,50,50,null,51.5,53,null,53,53,null,53,51.5,null,51.5,51.5,null,53,54.5,null,54.5,54.5,null,51.5,51,null,51,51,null,51.5,52,null,52,52,null,54.5,53.5,null,53.5,53.5,null,54.5,55.5,null,55.5,55.5,null,53.5,53,null,53,53,null,53.5,54,null,54,54,null,55.5,55,null,55,55,null,55.5,56,null,56,56,null,74.4921875,66.296875,null,66.296875,66.296875,null,74.4921875,82.6875,null,82.6875,82.6875,null,66.296875,60.875,null,60.875,60.875,null,66.296875,71.71875,null,71.71875,71.71875,null,60.875,58.5,null,58.5,58.5,null,60.875,63.25,null,63.25,63.25,null,58.5,57.5,null,57.5,57.5,null,58.5,59.5,null,59.5,59.5,null,57.5,57,null,57,57,null,57.5,58,null,58,58,null,59.5,59,null,59,59,null,59.5,60,null,60,60,null,63.25,61.75,null,61.75,61.75,null,63.25,64.75,null,64.75,64.75,null,61.75,61,null,61,61,null,61.75,62.5,null,62.5,62.5,null,62.5,62,null,62,62,null,62.5,63,null,63,63,null,64.75,64,null,64,64,null,64.75,65.5,null,65.5,65.5,null,65.5,65,null,65,65,null,65.5,66,null,66,66,null,71.71875,67.9375,null,67.9375,67.9375,null,71.71875,75.5,null,75.5,75.5,null,67.9375,67,null,67,67,null,67.9375,68.875,null,68.875,68.875,null,68.875,68,null,68,68,null,68.875,69.75,null,69.75,69.75,null,69.75,69,null,69,69,null,69.75,70.5,null,70.5,70.5,null,70.5,70,null,70,70,null,70.5,71,null,71,71,null,75.5,73.25,null,73.25,73.25,null,75.5,77.75,null,77.75,77.75,null,73.25,72,null,72,72,null,73.25,74.5,null,74.5,74.5,null,74.5,73.5,null,73.5,73.5,null,74.5,75.5,null,75.5,75.5,null,73.5,73,null,73,73,null,73.5,74,null,74,74,null,75.5,75,null,75,75,null,75.5,76,null,76,76,null,77.75,77,null,77,77,null,77.75,78.5,null,78.5,78.5,null,78.5,78,null,78,78,null,78.5,79,null,79,79,null,82.6875,80.5,null,80.5,80.5,null,82.6875,84.875,null,84.875,84.875,null,80.5,80,null,80,80,null,80.5,81,null,81,81,null,84.875,82.75,null,82.75,82.75,null,84.875,87,null,87,87,null,82.75,82,null,82,82,null,82.75,83.5,null,83.5,83.5,null,83.5,83,null,83,83,null,83.5,84,null,84,84,null,87,85.5,null,85.5,85.5,null,87,88.5,null,88.5,88.5,null,85.5,85,null,85,85,null,85.5,86,null,86,86,null,88.5,87.5,null,87.5,87.5,null,88.5,89.5,null,89.5,89.5,null,87.5,87,null,87,87,null,87.5,88,null,88,88,null,89.5,89,null,89,89,null,89.5,90,null,90,90],"y":[3.786951404559519,3.786951404559519,null,3.786951404559519,1.3902755970500875,null,3.786951404559519,3.786951404559519,null,3.786951404559519,2.9990635844135389,null,1.3902755970500875,1.3902755970500875,null,1.3902755970500875,0,null,1.3902755970500875,1.3902755970500875,null,1.3902755970500875,0.56326006260751837,null,0.56326006260751837,0.56326006260751837,null,0.56326006260751837,0,null,0.56326006260751837,0.56326006260751837,null,0.56326006260751837,0,null,2.9990635844135389,2.9990635844135389,null,2.9990635844135389,1.9490343921429796,null,2.9990635844135389,2.9990635844135389,null,2.9990635844135389,2.7615368671017118,null,1.9490343921429796,1.9490343921429796,null,1.9490343921429796,1.0825802534858695,null,1.9490343921429796,1.9490343921429796,null,1.9490343921429796,1.7475524877448887,null,1.0825802534858695,1.0825802534858695,null,1.0825802534858695,0,null,1.0825802534858695,1.0825802534858695,null,1.0825802534858695,0.69217708252276722,null,0.69217708252276722,0.69217708252276722,null,0.69217708252276722,0,null,0.69217708252276722,0.69217708252276722,null,0.69217708252276722,0,null,1.7475524877448887,1.7475524877448887,null,1.7475524877448887,1.0028359317845337,null,1.7475524877448887,1.7475524877448887,null,1.7475524877448887,1.2171931537036091,null,1.0028359317845337,1.0028359317845337,null,1.0028359317845337,0,null,1.0028359317845337,1.0028359317845337,null,1.0028359317845337,0.5225773513454367,null,0.5225773513454367,0.5225773513454367,null,0.5225773513454367,0.37815953258277413,null,0.5225773513454367,0.5225773513454367,null,0.5225773513454367,0.41371708740068347,null,0.37815953258277413,0.37815953258277413,null,0.37815953258277413,0,null,0.37815953258277413,0.37815953258277413,null,0.37815953258277413,0.071541563410721626,null,0.071541563410721626,0.071541563410721626,null,0.071541563410721626,0,null,0.071541563410721626,0.071541563410721626,null,0.071541563410721626,0,null,0.41371708740068347,0.41371708740068347,null,0.41371708740068347,0,null,0.41371708740068347,0.41371708740068347,null,0.41371708740068347,0.24449926468203551,null,0.24449926468203551,0.24449926468203551,null,0.24449926468203551,0,null,0.24449926468203551,0.24449926468203551,null,0.24449926468203551,0.11236674780278819,null,0.11236674780278819,0.11236674780278819,null,0.11236674780278819,0,null,0.11236674780278819,0.11236674780278819,null,0.11236674780278819,0,null,1.2171931537036091,1.2171931537036091,null,1.2171931537036091,0.94562037572794999,null,1.2171931537036091,1.2171931537036091,null,1.2171931537036091,1.0601041705661052,null,0.94562037572794999,0.94562037572794999,null,0.94562037572794999,0.16343283958811941,null,0.94562037572794999,0.94562037572794999,null,0.94562037572794999,0.64589733529439752,null,0.16343283958811941,0.16343283958811941,null,0.16343283958811941,0,null,0.16343283958811941,0.16343283958811941,null,0.16343283958811941,0,null,0.64589733529439752,0.64589733529439752,null,0.64589733529439752,0,null,0.64589733529439752,0.64589733529439752,null,0.64589733529439752,0.28638798680404731,null,0.28638798680404731,0.28638798680404731,null,0.28638798680404731,0,null,0.28638798680404731,0.28638798680404731,null,0.28638798680404731,0,null,1.0601041705661052,1.0601041705661052,null,1.0601041705661052,0,null,1.0601041705661052,1.0601041705661052,null,1.0601041705661052,0.36481048889809986,null,0.36481048889809986,0.36481048889809986,null,0.36481048889809986,0,null,0.36481048889809986,0.36481048889809986,null,0.36481048889809986,0,null,2.7615368671017118,2.7615368671017118,null,2.7615368671017118,2.4960758494257829,null,2.7615368671017118,2.7615368671017118,null,2.7615368671017118,2.5435339613889343,null,2.4960758494257829,2.4960758494257829,null,2.4960758494257829,1.7454257501121364,null,2.4960758494257829,2.4960758494257829,null,2.4960758494257829,2.3042918988959578,null,1.7454257501121364,1.7454257501121364,null,1.7454257501121364,0,null,1.7454257501121364,1.7454257501121364,null,1.7454257501121364,1.593741340460304,null,1.593741340460304,1.593741340460304,null,1.593741340460304,0.73809511360039259,null,1.593741340460304,1.593741340460304,null,1.593741340460304,1.219875441948886,null,0.73809511360039259,0.73809511360039259,null,0.73809511360039259,0,null,0.73809511360039259,0.73809511360039259,null,0.73809511360039259,0,null,1.219875441948886,1.219875441948886,null,1.219875441948886,0,null,1.219875441948886,1.219875441948886,null,1.219875441948886,0.78099612775142468,null,0.78099612775142468,0.78099612775142468,null,0.78099612775142468,0,null,0.78099612775142468,0.78099612775142468,null,0.78099612775142468,0,null,2.3042918988959578,2.3042918988959578,null,2.3042918988959578,1.5727161959187663,null,2.3042918988959578,2.3042918988959578,null,2.3042918988959578,1.8601876513724669,null,1.5727161959187663,1.5727161959187663,null,1.5727161959187663,1.0209302523486303,null,1.5727161959187663,1.5727161959187663,null,1.5727161959187663,1.2778999986294284,null,1.0209302523486303,1.0209302523486303,null,1.0209302523486303,0.5106239206371882,null,1.0209302523486303,1.0209302523486303,null,1.0209302523486303,0.87371229255289673,null,0.5106239206371882,0.5106239206371882,null,0.5106239206371882,0,null,0.5106239206371882,0.5106239206371882,null,0.5106239206371882,0,null,0,0,null,0,0,null,0,0,null,0,0,null,0.87371229255289673,0.87371229255289673,null,0.87371229255289673,0,null,0.87371229255289673,0.87371229255289673,null,0.87371229255289673,0,null,1.2778999986294284,1.2778999986294284,null,1.2778999986294284,0.81976030930891963,null,1.2778999986294284,1.2778999986294284,null,1.2778999986294284,0.85623903926331257,null,0.81976030930891963,0.81976030930891963,null,0.81976030930891963,0,null,0.81976030930891963,0.81976030930891963,null,0.81976030930891963,0,null,0.85623903926331257,0.85623903926331257,null,0.85623903926331257,0,null,0.85623903926331257,0.85623903926331257,null,0.85623903926331257,0.40291699144021176,null,0.40291699144021176,0.40291699144021176,null,0.40291699144021176,0,null,0.40291699144021176,0.40291699144021176,null,0.40291699144021176,0.39167808715839236,null,0.39167808715839236,0.39167808715839236,null,0.39167808715839236,0,null,0.39167808715839236,0.39167808715839236,null,0.39167808715839236,0,null,1.8601876513724669,1.8601876513724669,null,1.8601876513724669,1.2946796623261079,null,1.8601876513724669,1.8601876513724669,null,1.8601876513724669,1.6852046550539761,null,1.2946796623261079,1.2946796623261079,null,1.2946796623261079,0,null,1.2946796623261079,1.2946796623261079,null,1.2946796623261079,0,null,1.6852046550539761,1.6852046550539761,null,1.6852046550539761,1.3626273032382674,null,1.6852046550539761,1.6852046550539761,null,1.6852046550539761,1.5554981494662743,null,1.3626273032382674,1.3626273032382674,null,1.3626273032382674,0,null,1.3626273032382674,1.3626273032382674,null,1.3626273032382674,1.0847785951903288,null,1.0847785951903288,1.0847785951903288,null,1.0847785951903288,0.81669687397303981,null,1.0847785951903288,1.0847785951903288,null,1.0847785951903288,0.84194821792314944,null,0.81669687397303981,0.81669687397303981,null,0.81669687397303981,0,null,0.81669687397303981,0.81669687397303981,null,0.81669687397303981,0,null,0.84194821792314944,0.84194821792314944,null,0.84194821792314944,0,null,0.84194821792314944,0.84194821792314944,null,0.84194821792314944,0.44210372213172533,null,0.44210372213172533,0.44210372213172533,null,0.44210372213172533,0,null,0.44210372213172533,0.44210372213172533,null,0.44210372213172533,0,null,1.5554981494662743,1.5554981494662743,null,1.5554981494662743,1.0262148519901213,null,1.5554981494662743,1.5554981494662743,null,1.5554981494662743,1.4262928892371398,null,1.0262148519901213,1.0262148519901213,null,1.0262148519901213,0,null,1.0262148519901213,1.0262148519901213,null,1.0262148519901213,0,null,1.4262928892371398,1.4262928892371398,null,1.4262928892371398,0,null,1.4262928892371398,1.4262928892371398,null,1.4262928892371398,1.1013874760486559,null,1.1013874760486559,1.1013874760486559,null,1.1013874760486559,0.74991733299607299,null,1.1013874760486559,1.1013874760486559,null,1.1013874760486559,1.0689123764809256,null,0.74991733299607299,0.74991733299607299,null,0.74991733299607299,0,null,0.74991733299607299,0.74991733299607299,null,0.74991733299607299,0,null,1.0689123764809256,1.0689123764809256,null,1.0689123764809256,0.51135479971024045,null,1.0689123764809256,1.0689123764809256,null,1.0689123764809256,0.80720819059636639,null,0.51135479971024045,0.51135479971024045,null,0.51135479971024045,0,null,0.51135479971024045,0.51135479971024045,null,0.51135479971024045,0,null,0.80720819059636639,0.80720819059636639,null,0.80720819059636639,0,null,0.80720819059636639,0.80720819059636639,null,0.80720819059636639,0,null,2.5435339613889343,2.5435339613889343,null,2.5435339613889343,1.9014352351292969,null,2.5435339613889343,2.5435339613889343,null,2.5435339613889343,2.1378782788236839,null,1.9014352351292969,1.9014352351292969,null,1.9014352351292969,1.2614484534685095,null,1.9014352351292969,1.9014352351292969,null,1.9014352351292969,1.7192858199110472,null,1.2614484534685095,1.2614484534685095,null,1.2614484534685095,0.7881092230240504,null,1.2614484534685095,1.2614484534685095,null,1.2614484534685095,1.1016690488889307,null,0.7881092230240504,0.7881092230240504,null,0.7881092230240504,0.61008043357456598,null,0.7881092230240504,0.7881092230240504,null,0.7881092230240504,0.72358375586637791,null,0.61008043357456598,0.61008043357456598,null,0.61008043357456598,0,null,0.61008043357456598,0.61008043357456598,null,0.61008043357456598,0,null,0.72358375586637791,0.72358375586637791,null,0.72358375586637791,0,null,0.72358375586637791,0.72358375586637791,null,0.72358375586637791,0,null,1.1016690488889307,1.1016690488889307,null,1.1016690488889307,0.86117482078358276,null,1.1016690488889307,1.1016690488889307,null,1.1016690488889307,0.96860307441925753,null,0.86117482078358276,0.86117482078358276,null,0.86117482078358276,0,null,0.86117482078358276,0.86117482078358276,null,0.86117482078358276,0.52082633337342243,null,0.52082633337342243,0.52082633337342243,null,0.52082633337342243,0,null,0.52082633337342243,0.52082633337342243,null,0.52082633337342243,0,null,0.96860307441925753,0.96860307441925753,null,0.96860307441925753,0,null,0.96860307441925753,0.96860307441925753,null,0.96860307441925753,0.47008361543985638,null,0.47008361543985638,0.47008361543985638,null,0.47008361543985638,0,null,0.47008361543985638,0.47008361543985638,null,0.47008361543985638,0,null,1.7192858199110472,1.7192858199110472,null,1.7192858199110472,1.087914862669161,null,1.7192858199110472,1.7192858199110472,null,1.7192858199110472,1.3788400311869831,null,1.087914862669161,1.087914862669161,null,1.087914862669161,0,null,1.087914862669161,1.087914862669161,null,1.087914862669161,1.0320160873678994,null,1.0320160873678994,1.0320160873678994,null,1.0320160873678994,0,null,1.0320160873678994,1.0320160873678994,null,1.0320160873678994,0.71658977956454151,null,0.71658977956454151,0.71658977956454151,null,0.71658977956454151,0,null,0.71658977956454151,0.71658977956454151,null,0.71658977956454151,0.39223098216223756,null,0.39223098216223756,0.39223098216223756,null,0.39223098216223756,0,null,0.39223098216223756,0.39223098216223756,null,0.39223098216223756,0,null,1.3788400311869831,1.3788400311869831,null,1.3788400311869831,1.0590145358674947,null,1.3788400311869831,1.3788400311869831,null,1.3788400311869831,1.1903054467350023,null,1.0590145358674947,1.0590145358674947,null,1.0590145358674947,0,null,1.0590145358674947,1.0590145358674947,null,1.0590145358674947,0.98961377447616561,null,0.98961377447616561,0.98961377447616561,null,0.98961377447616561,0.70742390039295577,null,0.98961377447616561,0.98961377447616561,null,0.98961377447616561,0.72415977370733997,null,0.70742390039295577,0.70742390039295577,null,0.70742390039295577,0,null,0.70742390039295577,0.70742390039295577,null,0.70742390039295577,0,null,0.72415977370733997,0.72415977370733997,null,0.72415977370733997,0,null,0.72415977370733997,0.72415977370733997,null,0.72415977370733997,0,null,1.1903054467350023,1.1903054467350023,null,1.1903054467350023,0,null,1.1903054467350023,1.1903054467350023,null,1.1903054467350023,0.794017477665664,null,0.794017477665664,0.794017477665664,null,0.794017477665664,0,null,0.794017477665664,0.794017477665664,null,0.794017477665664,0,null,2.1378782788236839,2.1378782788236839,null,2.1378782788236839,1.3305533354674117,null,2.1378782788236839,2.1378782788236839,null,2.1378782788236839,1.6958219195371065,null,1.3305533354674117,1.3305533354674117,null,1.3305533354674117,0,null,1.3305533354674117,1.3305533354674117,null,1.3305533354674117,0,null,1.6958219195371065,1.6958219195371065,null,1.6958219195371065,1.0297071301543865,null,1.6958219195371065,1.6958219195371065,null,1.6958219195371065,1.4255379370535401,null,1.0297071301543865,1.0297071301543865,null,1.0297071301543865,0,null,1.0297071301543865,1.0297071301543865,null,1.0297071301543865,0.91370624283554991,null,0.91370624283554991,0.91370624283554991,null,0.91370624283554991,0,null,0.91370624283554991,0.91370624283554991,null,0.91370624283554991,0,null,1.4255379370535401,1.4255379370535401,null,1.4255379370535401,0.86902923559173473,null,1.4255379370535401,1.4255379370535401,null,1.4255379370535401,1.1315383771711001,null,0.86902923559173473,0.86902923559173473,null,0.86902923559173473,0,null,0.86902923559173473,0.86902923559173473,null,0.86902923559173473,0,null,1.1315383771711001,1.1315383771711001,null,1.1315383771711001,0.515365698366686,null,1.1315383771711001,1.1315383771711001,null,1.1315383771711001,0.59317609598924181,null,0.515365698366686,0.515365698366686,null,0.515365698366686,0,null,0.515365698366686,0.515365698366686,null,0.515365698366686,0,null,0.59317609598924181,0.59317609598924181,null,0.59317609598924181,0,null,0.59317609598924181,0.59317609598924181,null,0.59317609598924181,0],"text":["x: 16.414551<br />y: 3.78695140<br />xend:  1.750000<br />yend: 3.78695140","x: 16.414551<br />y: 3.78695140<br />xend:  1.750000<br />yend: 3.78695140",null,"x:  1.750000<br />y: 3.78695140<br />xend:  1.750000<br />yend: 1.39027560","x:  1.750000<br />y: 3.78695140<br />xend:  1.750000<br />yend: 1.39027560",null,"x: 16.414551<br />y: 3.78695140<br />xend: 31.079102<br />yend: 3.78695140","x: 16.414551<br />y: 3.78695140<br />xend: 31.079102<br />yend: 3.78695140",null,"x: 31.079102<br />y: 3.78695140<br />xend: 31.079102<br />yend: 2.99906358","x: 31.079102<br />y: 3.78695140<br />xend: 31.079102<br />yend: 2.99906358",null,"x:  1.750000<br />y: 1.39027560<br />xend:  1.000000<br />yend: 1.39027560","x:  1.750000<br />y: 1.39027560<br />xend:  1.000000<br />yend: 1.39027560",null,"x:  1.000000<br />y: 1.39027560<br />xend:  1.000000<br />yend: 0.00000000","x:  1.000000<br />y: 1.39027560<br />xend:  1.000000<br />yend: 0.00000000",null,"x:  1.750000<br />y: 1.39027560<br />xend:  2.500000<br />yend: 1.39027560","x:  1.750000<br />y: 1.39027560<br />xend:  2.500000<br />yend: 1.39027560",null,"x:  2.500000<br />y: 1.39027560<br />xend:  2.500000<br />yend: 0.56326006","x:  2.500000<br />y: 1.39027560<br />xend:  2.500000<br />yend: 0.56326006",null,"x:  2.500000<br />y: 0.56326006<br />xend:  2.000000<br />yend: 0.56326006","x:  2.500000<br />y: 0.56326006<br />xend:  2.000000<br />yend: 0.56326006",null,"x:  2.000000<br />y: 0.56326006<br />xend:  2.000000<br />yend: 0.00000000","x:  2.000000<br />y: 0.56326006<br />xend:  2.000000<br />yend: 0.00000000",null,"x:  2.500000<br />y: 0.56326006<br />xend:  3.000000<br />yend: 0.56326006","x:  2.500000<br />y: 0.56326006<br />xend:  3.000000<br />yend: 0.56326006",null,"x:  3.000000<br />y: 0.56326006<br />xend:  3.000000<br />yend: 0.00000000","x:  3.000000<br />y: 0.56326006<br />xend:  3.000000<br />yend: 0.00000000",null,"x: 31.079102<br />y: 2.99906358<br />xend:  9.210938<br />yend: 2.99906358","x: 31.079102<br />y: 2.99906358<br />xend:  9.210938<br />yend: 2.99906358",null,"x:  9.210938<br />y: 2.99906358<br />xend:  9.210938<br />yend: 1.94903439","x:  9.210938<br />y: 2.99906358<br />xend:  9.210938<br />yend: 1.94903439",null,"x: 31.079102<br />y: 2.99906358<br />xend: 52.947266<br />yend: 2.99906358","x: 31.079102<br />y: 2.99906358<br />xend: 52.947266<br />yend: 2.99906358",null,"x: 52.947266<br />y: 2.99906358<br />xend: 52.947266<br />yend: 2.76153687","x: 52.947266<br />y: 2.99906358<br />xend: 52.947266<br />yend: 2.76153687",null,"x:  9.210938<br />y: 1.94903439<br />xend:  4.750000<br />yend: 1.94903439","x:  9.210938<br />y: 1.94903439<br />xend:  4.750000<br />yend: 1.94903439",null,"x:  4.750000<br />y: 1.94903439<br />xend:  4.750000<br />yend: 1.08258025","x:  4.750000<br />y: 1.94903439<br />xend:  4.750000<br />yend: 1.08258025",null,"x:  9.210938<br />y: 1.94903439<br />xend: 13.671875<br />yend: 1.94903439","x:  9.210938<br />y: 1.94903439<br />xend: 13.671875<br />yend: 1.94903439",null,"x: 13.671875<br />y: 1.94903439<br />xend: 13.671875<br />yend: 1.74755249","x: 13.671875<br />y: 1.94903439<br />xend: 13.671875<br />yend: 1.74755249",null,"x:  4.750000<br />y: 1.08258025<br />xend:  4.000000<br />yend: 1.08258025","x:  4.750000<br />y: 1.08258025<br />xend:  4.000000<br />yend: 1.08258025",null,"x:  4.000000<br />y: 1.08258025<br />xend:  4.000000<br />yend: 0.00000000","x:  4.000000<br />y: 1.08258025<br />xend:  4.000000<br />yend: 0.00000000",null,"x:  4.750000<br />y: 1.08258025<br />xend:  5.500000<br />yend: 1.08258025","x:  4.750000<br />y: 1.08258025<br />xend:  5.500000<br />yend: 1.08258025",null,"x:  5.500000<br />y: 1.08258025<br />xend:  5.500000<br />yend: 0.69217708","x:  5.500000<br />y: 1.08258025<br />xend:  5.500000<br />yend: 0.69217708",null,"x:  5.500000<br />y: 0.69217708<br />xend:  5.000000<br />yend: 0.69217708","x:  5.500000<br />y: 0.69217708<br />xend:  5.000000<br />yend: 0.69217708",null,"x:  5.000000<br />y: 0.69217708<br />xend:  5.000000<br />yend: 0.00000000","x:  5.000000<br />y: 0.69217708<br />xend:  5.000000<br />yend: 0.00000000",null,"x:  5.500000<br />y: 0.69217708<br />xend:  6.000000<br />yend: 0.69217708","x:  5.500000<br />y: 0.69217708<br />xend:  6.000000<br />yend: 0.69217708",null,"x:  6.000000<br />y: 0.69217708<br />xend:  6.000000<br />yend: 0.00000000","x:  6.000000<br />y: 0.69217708<br />xend:  6.000000<br />yend: 0.00000000",null,"x: 13.671875<br />y: 1.74755249<br />xend:  8.656250<br />yend: 1.74755249","x: 13.671875<br />y: 1.74755249<br />xend:  8.656250<br />yend: 1.74755249",null,"x:  8.656250<br />y: 1.74755249<br />xend:  8.656250<br />yend: 1.00283593","x:  8.656250<br />y: 1.74755249<br />xend:  8.656250<br />yend: 1.00283593",null,"x: 13.671875<br />y: 1.74755249<br />xend: 18.687500<br />yend: 1.74755249","x: 13.671875<br />y: 1.74755249<br />xend: 18.687500<br />yend: 1.74755249",null,"x: 18.687500<br />y: 1.74755249<br />xend: 18.687500<br />yend: 1.21719315","x: 18.687500<br />y: 1.74755249<br />xend: 18.687500<br />yend: 1.21719315",null,"x:  8.656250<br />y: 1.00283593<br />xend:  7.000000<br />yend: 1.00283593","x:  8.656250<br />y: 1.00283593<br />xend:  7.000000<br />yend: 1.00283593",null,"x:  7.000000<br />y: 1.00283593<br />xend:  7.000000<br />yend: 0.00000000","x:  7.000000<br />y: 1.00283593<br />xend:  7.000000<br />yend: 0.00000000",null,"x:  8.656250<br />y: 1.00283593<br />xend: 10.312500<br />yend: 1.00283593","x:  8.656250<br />y: 1.00283593<br />xend: 10.312500<br />yend: 1.00283593",null,"x: 10.312500<br />y: 1.00283593<br />xend: 10.312500<br />yend: 0.52257735","x: 10.312500<br />y: 1.00283593<br />xend: 10.312500<br />yend: 0.52257735",null,"x: 10.312500<br />y: 0.52257735<br />xend:  8.750000<br />yend: 0.52257735","x: 10.312500<br />y: 0.52257735<br />xend:  8.750000<br />yend: 0.52257735",null,"x:  8.750000<br />y: 0.52257735<br />xend:  8.750000<br />yend: 0.37815953","x:  8.750000<br />y: 0.52257735<br />xend:  8.750000<br />yend: 0.37815953",null,"x: 10.312500<br />y: 0.52257735<br />xend: 11.875000<br />yend: 0.52257735","x: 10.312500<br />y: 0.52257735<br />xend: 11.875000<br />yend: 0.52257735",null,"x: 11.875000<br />y: 0.52257735<br />xend: 11.875000<br />yend: 0.41371709","x: 11.875000<br />y: 0.52257735<br />xend: 11.875000<br />yend: 0.41371709",null,"x:  8.750000<br />y: 0.37815953<br />xend:  8.000000<br />yend: 0.37815953","x:  8.750000<br />y: 0.37815953<br />xend:  8.000000<br />yend: 0.37815953",null,"x:  8.000000<br />y: 0.37815953<br />xend:  8.000000<br />yend: 0.00000000","x:  8.000000<br />y: 0.37815953<br />xend:  8.000000<br />yend: 0.00000000",null,"x:  8.750000<br />y: 0.37815953<br />xend:  9.500000<br />yend: 0.37815953","x:  8.750000<br />y: 0.37815953<br />xend:  9.500000<br />yend: 0.37815953",null,"x:  9.500000<br />y: 0.37815953<br />xend:  9.500000<br />yend: 0.07154156","x:  9.500000<br />y: 0.37815953<br />xend:  9.500000<br />yend: 0.07154156",null,"x:  9.500000<br />y: 0.07154156<br />xend:  9.000000<br />yend: 0.07154156","x:  9.500000<br />y: 0.07154156<br />xend:  9.000000<br />yend: 0.07154156",null,"x:  9.000000<br />y: 0.07154156<br />xend:  9.000000<br />yend: 0.00000000","x:  9.000000<br />y: 0.07154156<br />xend:  9.000000<br />yend: 0.00000000",null,"x:  9.500000<br />y: 0.07154156<br />xend: 10.000000<br />yend: 0.07154156","x:  9.500000<br />y: 0.07154156<br />xend: 10.000000<br />yend: 0.07154156",null,"x: 10.000000<br />y: 0.07154156<br />xend: 10.000000<br />yend: 0.00000000","x: 10.000000<br />y: 0.07154156<br />xend: 10.000000<br />yend: 0.00000000",null,"x: 11.875000<br />y: 0.41371709<br />xend: 11.000000<br />yend: 0.41371709","x: 11.875000<br />y: 0.41371709<br />xend: 11.000000<br />yend: 0.41371709",null,"x: 11.000000<br />y: 0.41371709<br />xend: 11.000000<br />yend: 0.00000000","x: 11.000000<br />y: 0.41371709<br />xend: 11.000000<br />yend: 0.00000000",null,"x: 11.875000<br />y: 0.41371709<br />xend: 12.750000<br />yend: 0.41371709","x: 11.875000<br />y: 0.41371709<br />xend: 12.750000<br />yend: 0.41371709",null,"x: 12.750000<br />y: 0.41371709<br />xend: 12.750000<br />yend: 0.24449926","x: 12.750000<br />y: 0.41371709<br />xend: 12.750000<br />yend: 0.24449926",null,"x: 12.750000<br />y: 0.24449926<br />xend: 12.000000<br />yend: 0.24449926","x: 12.750000<br />y: 0.24449926<br />xend: 12.000000<br />yend: 0.24449926",null,"x: 12.000000<br />y: 0.24449926<br />xend: 12.000000<br />yend: 0.00000000","x: 12.000000<br />y: 0.24449926<br />xend: 12.000000<br />yend: 0.00000000",null,"x: 12.750000<br />y: 0.24449926<br />xend: 13.500000<br />yend: 0.24449926","x: 12.750000<br />y: 0.24449926<br />xend: 13.500000<br />yend: 0.24449926",null,"x: 13.500000<br />y: 0.24449926<br />xend: 13.500000<br />yend: 0.11236675","x: 13.500000<br />y: 0.24449926<br />xend: 13.500000<br />yend: 0.11236675",null,"x: 13.500000<br />y: 0.11236675<br />xend: 13.000000<br />yend: 0.11236675","x: 13.500000<br />y: 0.11236675<br />xend: 13.000000<br />yend: 0.11236675",null,"x: 13.000000<br />y: 0.11236675<br />xend: 13.000000<br />yend: 0.00000000","x: 13.000000<br />y: 0.11236675<br />xend: 13.000000<br />yend: 0.00000000",null,"x: 13.500000<br />y: 0.11236675<br />xend: 14.000000<br />yend: 0.11236675","x: 13.500000<br />y: 0.11236675<br />xend: 14.000000<br />yend: 0.11236675",null,"x: 14.000000<br />y: 0.11236675<br />xend: 14.000000<br />yend: 0.00000000","x: 14.000000<br />y: 0.11236675<br />xend: 14.000000<br />yend: 0.00000000",null,"x: 18.687500<br />y: 1.21719315<br />xend: 16.625000<br />yend: 1.21719315","x: 18.687500<br />y: 1.21719315<br />xend: 16.625000<br />yend: 1.21719315",null,"x: 16.625000<br />y: 1.21719315<br />xend: 16.625000<br />yend: 0.94562038","x: 16.625000<br />y: 1.21719315<br />xend: 16.625000<br />yend: 0.94562038",null,"x: 18.687500<br />y: 1.21719315<br />xend: 20.750000<br />yend: 1.21719315","x: 18.687500<br />y: 1.21719315<br />xend: 20.750000<br />yend: 1.21719315",null,"x: 20.750000<br />y: 1.21719315<br />xend: 20.750000<br />yend: 1.06010417","x: 20.750000<br />y: 1.21719315<br />xend: 20.750000<br />yend: 1.06010417",null,"x: 16.625000<br />y: 0.94562038<br />xend: 15.500000<br />yend: 0.94562038","x: 16.625000<br />y: 0.94562038<br />xend: 15.500000<br />yend: 0.94562038",null,"x: 15.500000<br />y: 0.94562038<br />xend: 15.500000<br />yend: 0.16343284","x: 15.500000<br />y: 0.94562038<br />xend: 15.500000<br />yend: 0.16343284",null,"x: 16.625000<br />y: 0.94562038<br />xend: 17.750000<br />yend: 0.94562038","x: 16.625000<br />y: 0.94562038<br />xend: 17.750000<br />yend: 0.94562038",null,"x: 17.750000<br />y: 0.94562038<br />xend: 17.750000<br />yend: 0.64589734","x: 17.750000<br />y: 0.94562038<br />xend: 17.750000<br />yend: 0.64589734",null,"x: 15.500000<br />y: 0.16343284<br />xend: 15.000000<br />yend: 0.16343284","x: 15.500000<br />y: 0.16343284<br />xend: 15.000000<br />yend: 0.16343284",null,"x: 15.000000<br />y: 0.16343284<br />xend: 15.000000<br />yend: 0.00000000","x: 15.000000<br />y: 0.16343284<br />xend: 15.000000<br />yend: 0.00000000",null,"x: 15.500000<br />y: 0.16343284<br />xend: 16.000000<br />yend: 0.16343284","x: 15.500000<br />y: 0.16343284<br />xend: 16.000000<br />yend: 0.16343284",null,"x: 16.000000<br />y: 0.16343284<br />xend: 16.000000<br />yend: 0.00000000","x: 16.000000<br />y: 0.16343284<br />xend: 16.000000<br />yend: 0.00000000",null,"x: 17.750000<br />y: 0.64589734<br />xend: 17.000000<br />yend: 0.64589734","x: 17.750000<br />y: 0.64589734<br />xend: 17.000000<br />yend: 0.64589734",null,"x: 17.000000<br />y: 0.64589734<br />xend: 17.000000<br />yend: 0.00000000","x: 17.000000<br />y: 0.64589734<br />xend: 17.000000<br />yend: 0.00000000",null,"x: 17.750000<br />y: 0.64589734<br />xend: 18.500000<br />yend: 0.64589734","x: 17.750000<br />y: 0.64589734<br />xend: 18.500000<br />yend: 0.64589734",null,"x: 18.500000<br />y: 0.64589734<br />xend: 18.500000<br />yend: 0.28638799","x: 18.500000<br />y: 0.64589734<br />xend: 18.500000<br />yend: 0.28638799",null,"x: 18.500000<br />y: 0.28638799<br />xend: 18.000000<br />yend: 0.28638799","x: 18.500000<br />y: 0.28638799<br />xend: 18.000000<br />yend: 0.28638799",null,"x: 18.000000<br />y: 0.28638799<br />xend: 18.000000<br />yend: 0.00000000","x: 18.000000<br />y: 0.28638799<br />xend: 18.000000<br />yend: 0.00000000",null,"x: 18.500000<br />y: 0.28638799<br />xend: 19.000000<br />yend: 0.28638799","x: 18.500000<br />y: 0.28638799<br />xend: 19.000000<br />yend: 0.28638799",null,"x: 19.000000<br />y: 0.28638799<br />xend: 19.000000<br />yend: 0.00000000","x: 19.000000<br />y: 0.28638799<br />xend: 19.000000<br />yend: 0.00000000",null,"x: 20.750000<br />y: 1.06010417<br />xend: 20.000000<br />yend: 1.06010417","x: 20.750000<br />y: 1.06010417<br />xend: 20.000000<br />yend: 1.06010417",null,"x: 20.000000<br />y: 1.06010417<br />xend: 20.000000<br />yend: 0.00000000","x: 20.000000<br />y: 1.06010417<br />xend: 20.000000<br />yend: 0.00000000",null,"x: 20.750000<br />y: 1.06010417<br />xend: 21.500000<br />yend: 1.06010417","x: 20.750000<br />y: 1.06010417<br />xend: 21.500000<br />yend: 1.06010417",null,"x: 21.500000<br />y: 1.06010417<br />xend: 21.500000<br />yend: 0.36481049","x: 21.500000<br />y: 1.06010417<br />xend: 21.500000<br />yend: 0.36481049",null,"x: 21.500000<br />y: 0.36481049<br />xend: 21.000000<br />yend: 0.36481049","x: 21.500000<br />y: 0.36481049<br />xend: 21.000000<br />yend: 0.36481049",null,"x: 21.000000<br />y: 0.36481049<br />xend: 21.000000<br />yend: 0.00000000","x: 21.000000<br />y: 0.36481049<br />xend: 21.000000<br />yend: 0.00000000",null,"x: 21.500000<br />y: 0.36481049<br />xend: 22.000000<br />yend: 0.36481049","x: 21.500000<br />y: 0.36481049<br />xend: 22.000000<br />yend: 0.36481049",null,"x: 22.000000<br />y: 0.36481049<br />xend: 22.000000<br />yend: 0.00000000","x: 22.000000<br />y: 0.36481049<br />xend: 22.000000<br />yend: 0.00000000",null,"x: 52.947266<br />y: 2.76153687<br />xend: 31.402344<br />yend: 2.76153687","x: 52.947266<br />y: 2.76153687<br />xend: 31.402344<br />yend: 2.76153687",null,"x: 31.402344<br />y: 2.76153687<br />xend: 31.402344<br />yend: 2.49607585","x: 31.402344<br />y: 2.76153687<br />xend: 31.402344<br />yend: 2.49607585",null,"x: 52.947266<br />y: 2.76153687<br />xend: 74.492188<br />yend: 2.76153687","x: 52.947266<br />y: 2.76153687<br />xend: 74.492188<br />yend: 2.76153687",null,"x: 74.492188<br />y: 2.76153687<br />xend: 74.492188<br />yend: 2.54353396","x: 74.492188<br />y: 2.76153687<br />xend: 74.492188<br />yend: 2.54353396",null,"x: 31.402344<br />y: 2.49607585<br />xend: 24.312500<br />yend: 2.49607585","x: 31.402344<br />y: 2.49607585<br />xend: 24.312500<br />yend: 2.49607585",null,"x: 24.312500<br />y: 2.49607585<br />xend: 24.312500<br />yend: 1.74542575","x: 24.312500<br />y: 2.49607585<br />xend: 24.312500<br />yend: 1.74542575",null,"x: 31.402344<br />y: 2.49607585<br />xend: 38.492188<br />yend: 2.49607585","x: 31.402344<br />y: 2.49607585<br />xend: 38.492188<br />yend: 2.49607585",null,"x: 38.492188<br />y: 2.49607585<br />xend: 38.492188<br />yend: 2.30429190","x: 38.492188<br />y: 2.49607585<br />xend: 38.492188<br />yend: 2.30429190",null,"x: 24.312500<br />y: 1.74542575<br />xend: 23.000000<br />yend: 1.74542575","x: 24.312500<br />y: 1.74542575<br />xend: 23.000000<br />yend: 1.74542575",null,"x: 23.000000<br />y: 1.74542575<br />xend: 23.000000<br />yend: 0.00000000","x: 23.000000<br />y: 1.74542575<br />xend: 23.000000<br />yend: 0.00000000",null,"x: 24.312500<br />y: 1.74542575<br />xend: 25.625000<br />yend: 1.74542575","x: 24.312500<br />y: 1.74542575<br />xend: 25.625000<br />yend: 1.74542575",null,"x: 25.625000<br />y: 1.74542575<br />xend: 25.625000<br />yend: 1.59374134","x: 25.625000<br />y: 1.74542575<br />xend: 25.625000<br />yend: 1.59374134",null,"x: 25.625000<br />y: 1.59374134<br />xend: 24.500000<br />yend: 1.59374134","x: 25.625000<br />y: 1.59374134<br />xend: 24.500000<br />yend: 1.59374134",null,"x: 24.500000<br />y: 1.59374134<br />xend: 24.500000<br />yend: 0.73809511","x: 24.500000<br />y: 1.59374134<br />xend: 24.500000<br />yend: 0.73809511",null,"x: 25.625000<br />y: 1.59374134<br />xend: 26.750000<br />yend: 1.59374134","x: 25.625000<br />y: 1.59374134<br />xend: 26.750000<br />yend: 1.59374134",null,"x: 26.750000<br />y: 1.59374134<br />xend: 26.750000<br />yend: 1.21987544","x: 26.750000<br />y: 1.59374134<br />xend: 26.750000<br />yend: 1.21987544",null,"x: 24.500000<br />y: 0.73809511<br />xend: 24.000000<br />yend: 0.73809511","x: 24.500000<br />y: 0.73809511<br />xend: 24.000000<br />yend: 0.73809511",null,"x: 24.000000<br />y: 0.73809511<br />xend: 24.000000<br />yend: 0.00000000","x: 24.000000<br />y: 0.73809511<br />xend: 24.000000<br />yend: 0.00000000",null,"x: 24.500000<br />y: 0.73809511<br />xend: 25.000000<br />yend: 0.73809511","x: 24.500000<br />y: 0.73809511<br />xend: 25.000000<br />yend: 0.73809511",null,"x: 25.000000<br />y: 0.73809511<br />xend: 25.000000<br />yend: 0.00000000","x: 25.000000<br />y: 0.73809511<br />xend: 25.000000<br />yend: 0.00000000",null,"x: 26.750000<br />y: 1.21987544<br />xend: 26.000000<br />yend: 1.21987544","x: 26.750000<br />y: 1.21987544<br />xend: 26.000000<br />yend: 1.21987544",null,"x: 26.000000<br />y: 1.21987544<br />xend: 26.000000<br />yend: 0.00000000","x: 26.000000<br />y: 1.21987544<br />xend: 26.000000<br />yend: 0.00000000",null,"x: 26.750000<br />y: 1.21987544<br />xend: 27.500000<br />yend: 1.21987544","x: 26.750000<br />y: 1.21987544<br />xend: 27.500000<br />yend: 1.21987544",null,"x: 27.500000<br />y: 1.21987544<br />xend: 27.500000<br />yend: 0.78099613","x: 27.500000<br />y: 1.21987544<br />xend: 27.500000<br />yend: 0.78099613",null,"x: 27.500000<br />y: 0.78099613<br />xend: 27.000000<br />yend: 0.78099613","x: 27.500000<br />y: 0.78099613<br />xend: 27.000000<br />yend: 0.78099613",null,"x: 27.000000<br />y: 0.78099613<br />xend: 27.000000<br />yend: 0.00000000","x: 27.000000<br />y: 0.78099613<br />xend: 27.000000<br />yend: 0.00000000",null,"x: 27.500000<br />y: 0.78099613<br />xend: 28.000000<br />yend: 0.78099613","x: 27.500000<br />y: 0.78099613<br />xend: 28.000000<br />yend: 0.78099613",null,"x: 28.000000<br />y: 0.78099613<br />xend: 28.000000<br />yend: 0.00000000","x: 28.000000<br />y: 0.78099613<br />xend: 28.000000<br />yend: 0.00000000",null,"x: 38.492188<br />y: 2.30429190<br />xend: 33.406250<br />yend: 2.30429190","x: 38.492188<br />y: 2.30429190<br />xend: 33.406250<br />yend: 2.30429190",null,"x: 33.406250<br />y: 2.30429190<br />xend: 33.406250<br />yend: 1.57271620","x: 33.406250<br />y: 2.30429190<br />xend: 33.406250<br />yend: 1.57271620",null,"x: 38.492188<br />y: 2.30429190<br />xend: 43.578125<br />yend: 2.30429190","x: 38.492188<br />y: 2.30429190<br />xend: 43.578125<br />yend: 2.30429190",null,"x: 43.578125<br />y: 2.30429190<br />xend: 43.578125<br />yend: 1.86018765","x: 43.578125<br />y: 2.30429190<br />xend: 43.578125<br />yend: 1.86018765",null,"x: 33.406250<br />y: 1.57271620<br />xend: 31.125000<br />yend: 1.57271620","x: 33.406250<br />y: 1.57271620<br />xend: 31.125000<br />yend: 1.57271620",null,"x: 31.125000<br />y: 1.57271620<br />xend: 31.125000<br />yend: 1.02093025","x: 31.125000<br />y: 1.57271620<br />xend: 31.125000<br />yend: 1.02093025",null,"x: 33.406250<br />y: 1.57271620<br />xend: 35.687500<br />yend: 1.57271620","x: 33.406250<br />y: 1.57271620<br />xend: 35.687500<br />yend: 1.57271620",null,"x: 35.687500<br />y: 1.57271620<br />xend: 35.687500<br />yend: 1.27790000","x: 35.687500<br />y: 1.57271620<br />xend: 35.687500<br />yend: 1.27790000",null,"x: 31.125000<br />y: 1.02093025<br />xend: 29.750000<br />yend: 1.02093025","x: 31.125000<br />y: 1.02093025<br />xend: 29.750000<br />yend: 1.02093025",null,"x: 29.750000<br />y: 1.02093025<br />xend: 29.750000<br />yend: 0.51062392","x: 29.750000<br />y: 1.02093025<br />xend: 29.750000<br />yend: 0.51062392",null,"x: 31.125000<br />y: 1.02093025<br />xend: 32.500000<br />yend: 1.02093025","x: 31.125000<br />y: 1.02093025<br />xend: 32.500000<br />yend: 1.02093025",null,"x: 32.500000<br />y: 1.02093025<br />xend: 32.500000<br />yend: 0.87371229","x: 32.500000<br />y: 1.02093025<br />xend: 32.500000<br />yend: 0.87371229",null,"x: 29.750000<br />y: 0.51062392<br />xend: 29.000000<br />yend: 0.51062392","x: 29.750000<br />y: 0.51062392<br />xend: 29.000000<br />yend: 0.51062392",null,"x: 29.000000<br />y: 0.51062392<br />xend: 29.000000<br />yend: 0.00000000","x: 29.000000<br />y: 0.51062392<br />xend: 29.000000<br />yend: 0.00000000",null,"x: 29.750000<br />y: 0.51062392<br />xend: 30.500000<br />yend: 0.51062392","x: 29.750000<br />y: 0.51062392<br />xend: 30.500000<br />yend: 0.51062392",null,"x: 30.500000<br />y: 0.51062392<br />xend: 30.500000<br />yend: 0.00000000","x: 30.500000<br />y: 0.51062392<br />xend: 30.500000<br />yend: 0.00000000",null,"x: 30.500000<br />y: 0.00000000<br />xend: 30.000000<br />yend: 0.00000000","x: 30.500000<br />y: 0.00000000<br />xend: 30.000000<br />yend: 0.00000000",null,"x: 30.000000<br />y: 0.00000000<br />xend: 30.000000<br />yend: 0.00000000","x: 30.000000<br />y: 0.00000000<br />xend: 30.000000<br />yend: 0.00000000",null,"x: 30.500000<br />y: 0.00000000<br />xend: 31.000000<br />yend: 0.00000000","x: 30.500000<br />y: 0.00000000<br />xend: 31.000000<br />yend: 0.00000000",null,"x: 31.000000<br />y: 0.00000000<br />xend: 31.000000<br />yend: 0.00000000","x: 31.000000<br />y: 0.00000000<br />xend: 31.000000<br />yend: 0.00000000",null,"x: 32.500000<br />y: 0.87371229<br />xend: 32.000000<br />yend: 0.87371229","x: 32.500000<br />y: 0.87371229<br />xend: 32.000000<br />yend: 0.87371229",null,"x: 32.000000<br />y: 0.87371229<br />xend: 32.000000<br />yend: 0.00000000","x: 32.000000<br />y: 0.87371229<br />xend: 32.000000<br />yend: 0.00000000",null,"x: 32.500000<br />y: 0.87371229<br />xend: 33.000000<br />yend: 0.87371229","x: 32.500000<br />y: 0.87371229<br />xend: 33.000000<br />yend: 0.87371229",null,"x: 33.000000<br />y: 0.87371229<br />xend: 33.000000<br />yend: 0.00000000","x: 33.000000<br />y: 0.87371229<br />xend: 33.000000<br />yend: 0.00000000",null,"x: 35.687500<br />y: 1.27790000<br />xend: 34.500000<br />yend: 1.27790000","x: 35.687500<br />y: 1.27790000<br />xend: 34.500000<br />yend: 1.27790000",null,"x: 34.500000<br />y: 1.27790000<br />xend: 34.500000<br />yend: 0.81976031","x: 34.500000<br />y: 1.27790000<br />xend: 34.500000<br />yend: 0.81976031",null,"x: 35.687500<br />y: 1.27790000<br />xend: 36.875000<br />yend: 1.27790000","x: 35.687500<br />y: 1.27790000<br />xend: 36.875000<br />yend: 1.27790000",null,"x: 36.875000<br />y: 1.27790000<br />xend: 36.875000<br />yend: 0.85623904","x: 36.875000<br />y: 1.27790000<br />xend: 36.875000<br />yend: 0.85623904",null,"x: 34.500000<br />y: 0.81976031<br />xend: 34.000000<br />yend: 0.81976031","x: 34.500000<br />y: 0.81976031<br />xend: 34.000000<br />yend: 0.81976031",null,"x: 34.000000<br />y: 0.81976031<br />xend: 34.000000<br />yend: 0.00000000","x: 34.000000<br />y: 0.81976031<br />xend: 34.000000<br />yend: 0.00000000",null,"x: 34.500000<br />y: 0.81976031<br />xend: 35.000000<br />yend: 0.81976031","x: 34.500000<br />y: 0.81976031<br />xend: 35.000000<br />yend: 0.81976031",null,"x: 35.000000<br />y: 0.81976031<br />xend: 35.000000<br />yend: 0.00000000","x: 35.000000<br />y: 0.81976031<br />xend: 35.000000<br />yend: 0.00000000",null,"x: 36.875000<br />y: 0.85623904<br />xend: 36.000000<br />yend: 0.85623904","x: 36.875000<br />y: 0.85623904<br />xend: 36.000000<br />yend: 0.85623904",null,"x: 36.000000<br />y: 0.85623904<br />xend: 36.000000<br />yend: 0.00000000","x: 36.000000<br />y: 0.85623904<br />xend: 36.000000<br />yend: 0.00000000",null,"x: 36.875000<br />y: 0.85623904<br />xend: 37.750000<br />yend: 0.85623904","x: 36.875000<br />y: 0.85623904<br />xend: 37.750000<br />yend: 0.85623904",null,"x: 37.750000<br />y: 0.85623904<br />xend: 37.750000<br />yend: 0.40291699","x: 37.750000<br />y: 0.85623904<br />xend: 37.750000<br />yend: 0.40291699",null,"x: 37.750000<br />y: 0.40291699<br />xend: 37.000000<br />yend: 0.40291699","x: 37.750000<br />y: 0.40291699<br />xend: 37.000000<br />yend: 0.40291699",null,"x: 37.000000<br />y: 0.40291699<br />xend: 37.000000<br />yend: 0.00000000","x: 37.000000<br />y: 0.40291699<br />xend: 37.000000<br />yend: 0.00000000",null,"x: 37.750000<br />y: 0.40291699<br />xend: 38.500000<br />yend: 0.40291699","x: 37.750000<br />y: 0.40291699<br />xend: 38.500000<br />yend: 0.40291699",null,"x: 38.500000<br />y: 0.40291699<br />xend: 38.500000<br />yend: 0.39167809","x: 38.500000<br />y: 0.40291699<br />xend: 38.500000<br />yend: 0.39167809",null,"x: 38.500000<br />y: 0.39167809<br />xend: 38.000000<br />yend: 0.39167809","x: 38.500000<br />y: 0.39167809<br />xend: 38.000000<br />yend: 0.39167809",null,"x: 38.000000<br />y: 0.39167809<br />xend: 38.000000<br />yend: 0.00000000","x: 38.000000<br />y: 0.39167809<br />xend: 38.000000<br />yend: 0.00000000",null,"x: 38.500000<br />y: 0.39167809<br />xend: 39.000000<br />yend: 0.39167809","x: 38.500000<br />y: 0.39167809<br />xend: 39.000000<br />yend: 0.39167809",null,"x: 39.000000<br />y: 0.39167809<br />xend: 39.000000<br />yend: 0.00000000","x: 39.000000<br />y: 0.39167809<br />xend: 39.000000<br />yend: 0.00000000",null,"x: 43.578125<br />y: 1.86018765<br />xend: 40.500000<br />yend: 1.86018765","x: 43.578125<br />y: 1.86018765<br />xend: 40.500000<br />yend: 1.86018765",null,"x: 40.500000<br />y: 1.86018765<br />xend: 40.500000<br />yend: 1.29467966","x: 40.500000<br />y: 1.86018765<br />xend: 40.500000<br />yend: 1.29467966",null,"x: 43.578125<br />y: 1.86018765<br />xend: 46.656250<br />yend: 1.86018765","x: 43.578125<br />y: 1.86018765<br />xend: 46.656250<br />yend: 1.86018765",null,"x: 46.656250<br />y: 1.86018765<br />xend: 46.656250<br />yend: 1.68520466","x: 46.656250<br />y: 1.86018765<br />xend: 46.656250<br />yend: 1.68520466",null,"x: 40.500000<br />y: 1.29467966<br />xend: 40.000000<br />yend: 1.29467966","x: 40.500000<br />y: 1.29467966<br />xend: 40.000000<br />yend: 1.29467966",null,"x: 40.000000<br />y: 1.29467966<br />xend: 40.000000<br />yend: 0.00000000","x: 40.000000<br />y: 1.29467966<br />xend: 40.000000<br />yend: 0.00000000",null,"x: 40.500000<br />y: 1.29467966<br />xend: 41.000000<br />yend: 1.29467966","x: 40.500000<br />y: 1.29467966<br />xend: 41.000000<br />yend: 1.29467966",null,"x: 41.000000<br />y: 1.29467966<br />xend: 41.000000<br />yend: 0.00000000","x: 41.000000<br />y: 1.29467966<br />xend: 41.000000<br />yend: 0.00000000",null,"x: 46.656250<br />y: 1.68520466<br />xend: 43.312500<br />yend: 1.68520466","x: 46.656250<br />y: 1.68520466<br />xend: 43.312500<br />yend: 1.68520466",null,"x: 43.312500<br />y: 1.68520466<br />xend: 43.312500<br />yend: 1.36262730","x: 43.312500<br />y: 1.68520466<br />xend: 43.312500<br />yend: 1.36262730",null,"x: 46.656250<br />y: 1.68520466<br />xend: 50.000000<br />yend: 1.68520466","x: 46.656250<br />y: 1.68520466<br />xend: 50.000000<br />yend: 1.68520466",null,"x: 50.000000<br />y: 1.68520466<br />xend: 50.000000<br />yend: 1.55549815","x: 50.000000<br />y: 1.68520466<br />xend: 50.000000<br />yend: 1.55549815",null,"x: 43.312500<br />y: 1.36262730<br />xend: 42.000000<br />yend: 1.36262730","x: 43.312500<br />y: 1.36262730<br />xend: 42.000000<br />yend: 1.36262730",null,"x: 42.000000<br />y: 1.36262730<br />xend: 42.000000<br />yend: 0.00000000","x: 42.000000<br />y: 1.36262730<br />xend: 42.000000<br />yend: 0.00000000",null,"x: 43.312500<br />y: 1.36262730<br />xend: 44.625000<br />yend: 1.36262730","x: 43.312500<br />y: 1.36262730<br />xend: 44.625000<br />yend: 1.36262730",null,"x: 44.625000<br />y: 1.36262730<br />xend: 44.625000<br />yend: 1.08477860","x: 44.625000<br />y: 1.36262730<br />xend: 44.625000<br />yend: 1.08477860",null,"x: 44.625000<br />y: 1.08477860<br />xend: 43.500000<br />yend: 1.08477860","x: 44.625000<br />y: 1.08477860<br />xend: 43.500000<br />yend: 1.08477860",null,"x: 43.500000<br />y: 1.08477860<br />xend: 43.500000<br />yend: 0.81669687","x: 43.500000<br />y: 1.08477860<br />xend: 43.500000<br />yend: 0.81669687",null,"x: 44.625000<br />y: 1.08477860<br />xend: 45.750000<br />yend: 1.08477860","x: 44.625000<br />y: 1.08477860<br />xend: 45.750000<br />yend: 1.08477860",null,"x: 45.750000<br />y: 1.08477860<br />xend: 45.750000<br />yend: 0.84194822","x: 45.750000<br />y: 1.08477860<br />xend: 45.750000<br />yend: 0.84194822",null,"x: 43.500000<br />y: 0.81669687<br />xend: 43.000000<br />yend: 0.81669687","x: 43.500000<br />y: 0.81669687<br />xend: 43.000000<br />yend: 0.81669687",null,"x: 43.000000<br />y: 0.81669687<br />xend: 43.000000<br />yend: 0.00000000","x: 43.000000<br />y: 0.81669687<br />xend: 43.000000<br />yend: 0.00000000",null,"x: 43.500000<br />y: 0.81669687<br />xend: 44.000000<br />yend: 0.81669687","x: 43.500000<br />y: 0.81669687<br />xend: 44.000000<br />yend: 0.81669687",null,"x: 44.000000<br />y: 0.81669687<br />xend: 44.000000<br />yend: 0.00000000","x: 44.000000<br />y: 0.81669687<br />xend: 44.000000<br />yend: 0.00000000",null,"x: 45.750000<br />y: 0.84194822<br />xend: 45.000000<br />yend: 0.84194822","x: 45.750000<br />y: 0.84194822<br />xend: 45.000000<br />yend: 0.84194822",null,"x: 45.000000<br />y: 0.84194822<br />xend: 45.000000<br />yend: 0.00000000","x: 45.000000<br />y: 0.84194822<br />xend: 45.000000<br />yend: 0.00000000",null,"x: 45.750000<br />y: 0.84194822<br />xend: 46.500000<br />yend: 0.84194822","x: 45.750000<br />y: 0.84194822<br />xend: 46.500000<br />yend: 0.84194822",null,"x: 46.500000<br />y: 0.84194822<br />xend: 46.500000<br />yend: 0.44210372","x: 46.500000<br />y: 0.84194822<br />xend: 46.500000<br />yend: 0.44210372",null,"x: 46.500000<br />y: 0.44210372<br />xend: 46.000000<br />yend: 0.44210372","x: 46.500000<br />y: 0.44210372<br />xend: 46.000000<br />yend: 0.44210372",null,"x: 46.000000<br />y: 0.44210372<br />xend: 46.000000<br />yend: 0.00000000","x: 46.000000<br />y: 0.44210372<br />xend: 46.000000<br />yend: 0.00000000",null,"x: 46.500000<br />y: 0.44210372<br />xend: 47.000000<br />yend: 0.44210372","x: 46.500000<br />y: 0.44210372<br />xend: 47.000000<br />yend: 0.44210372",null,"x: 47.000000<br />y: 0.44210372<br />xend: 47.000000<br />yend: 0.00000000","x: 47.000000<br />y: 0.44210372<br />xend: 47.000000<br />yend: 0.00000000",null,"x: 50.000000<br />y: 1.55549815<br />xend: 48.500000<br />yend: 1.55549815","x: 50.000000<br />y: 1.55549815<br />xend: 48.500000<br />yend: 1.55549815",null,"x: 48.500000<br />y: 1.55549815<br />xend: 48.500000<br />yend: 1.02621485","x: 48.500000<br />y: 1.55549815<br />xend: 48.500000<br />yend: 1.02621485",null,"x: 50.000000<br />y: 1.55549815<br />xend: 51.500000<br />yend: 1.55549815","x: 50.000000<br />y: 1.55549815<br />xend: 51.500000<br />yend: 1.55549815",null,"x: 51.500000<br />y: 1.55549815<br />xend: 51.500000<br />yend: 1.42629289","x: 51.500000<br />y: 1.55549815<br />xend: 51.500000<br />yend: 1.42629289",null,"x: 48.500000<br />y: 1.02621485<br />xend: 48.000000<br />yend: 1.02621485","x: 48.500000<br />y: 1.02621485<br />xend: 48.000000<br />yend: 1.02621485",null,"x: 48.000000<br />y: 1.02621485<br />xend: 48.000000<br />yend: 0.00000000","x: 48.000000<br />y: 1.02621485<br />xend: 48.000000<br />yend: 0.00000000",null,"x: 48.500000<br />y: 1.02621485<br />xend: 49.000000<br />yend: 1.02621485","x: 48.500000<br />y: 1.02621485<br />xend: 49.000000<br />yend: 1.02621485",null,"x: 49.000000<br />y: 1.02621485<br />xend: 49.000000<br />yend: 0.00000000","x: 49.000000<br />y: 1.02621485<br />xend: 49.000000<br />yend: 0.00000000",null,"x: 51.500000<br />y: 1.42629289<br />xend: 50.000000<br />yend: 1.42629289","x: 51.500000<br />y: 1.42629289<br />xend: 50.000000<br />yend: 1.42629289",null,"x: 50.000000<br />y: 1.42629289<br />xend: 50.000000<br />yend: 0.00000000","x: 50.000000<br />y: 1.42629289<br />xend: 50.000000<br />yend: 0.00000000",null,"x: 51.500000<br />y: 1.42629289<br />xend: 53.000000<br />yend: 1.42629289","x: 51.500000<br />y: 1.42629289<br />xend: 53.000000<br />yend: 1.42629289",null,"x: 53.000000<br />y: 1.42629289<br />xend: 53.000000<br />yend: 1.10138748","x: 53.000000<br />y: 1.42629289<br />xend: 53.000000<br />yend: 1.10138748",null,"x: 53.000000<br />y: 1.10138748<br />xend: 51.500000<br />yend: 1.10138748","x: 53.000000<br />y: 1.10138748<br />xend: 51.500000<br />yend: 1.10138748",null,"x: 51.500000<br />y: 1.10138748<br />xend: 51.500000<br />yend: 0.74991733","x: 51.500000<br />y: 1.10138748<br />xend: 51.500000<br />yend: 0.74991733",null,"x: 53.000000<br />y: 1.10138748<br />xend: 54.500000<br />yend: 1.10138748","x: 53.000000<br />y: 1.10138748<br />xend: 54.500000<br />yend: 1.10138748",null,"x: 54.500000<br />y: 1.10138748<br />xend: 54.500000<br />yend: 1.06891238","x: 54.500000<br />y: 1.10138748<br />xend: 54.500000<br />yend: 1.06891238",null,"x: 51.500000<br />y: 0.74991733<br />xend: 51.000000<br />yend: 0.74991733","x: 51.500000<br />y: 0.74991733<br />xend: 51.000000<br />yend: 0.74991733",null,"x: 51.000000<br />y: 0.74991733<br />xend: 51.000000<br />yend: 0.00000000","x: 51.000000<br />y: 0.74991733<br />xend: 51.000000<br />yend: 0.00000000",null,"x: 51.500000<br />y: 0.74991733<br />xend: 52.000000<br />yend: 0.74991733","x: 51.500000<br />y: 0.74991733<br />xend: 52.000000<br />yend: 0.74991733",null,"x: 52.000000<br />y: 0.74991733<br />xend: 52.000000<br />yend: 0.00000000","x: 52.000000<br />y: 0.74991733<br />xend: 52.000000<br />yend: 0.00000000",null,"x: 54.500000<br />y: 1.06891238<br />xend: 53.500000<br />yend: 1.06891238","x: 54.500000<br />y: 1.06891238<br />xend: 53.500000<br />yend: 1.06891238",null,"x: 53.500000<br />y: 1.06891238<br />xend: 53.500000<br />yend: 0.51135480","x: 53.500000<br />y: 1.06891238<br />xend: 53.500000<br />yend: 0.51135480",null,"x: 54.500000<br />y: 1.06891238<br />xend: 55.500000<br />yend: 1.06891238","x: 54.500000<br />y: 1.06891238<br />xend: 55.500000<br />yend: 1.06891238",null,"x: 55.500000<br />y: 1.06891238<br />xend: 55.500000<br />yend: 0.80720819","x: 55.500000<br />y: 1.06891238<br />xend: 55.500000<br />yend: 0.80720819",null,"x: 53.500000<br />y: 0.51135480<br />xend: 53.000000<br />yend: 0.51135480","x: 53.500000<br />y: 0.51135480<br />xend: 53.000000<br />yend: 0.51135480",null,"x: 53.000000<br />y: 0.51135480<br />xend: 53.000000<br />yend: 0.00000000","x: 53.000000<br />y: 0.51135480<br />xend: 53.000000<br />yend: 0.00000000",null,"x: 53.500000<br />y: 0.51135480<br />xend: 54.000000<br />yend: 0.51135480","x: 53.500000<br />y: 0.51135480<br />xend: 54.000000<br />yend: 0.51135480",null,"x: 54.000000<br />y: 0.51135480<br />xend: 54.000000<br />yend: 0.00000000","x: 54.000000<br />y: 0.51135480<br />xend: 54.000000<br />yend: 0.00000000",null,"x: 55.500000<br />y: 0.80720819<br />xend: 55.000000<br />yend: 0.80720819","x: 55.500000<br />y: 0.80720819<br />xend: 55.000000<br />yend: 0.80720819",null,"x: 55.000000<br />y: 0.80720819<br />xend: 55.000000<br />yend: 0.00000000","x: 55.000000<br />y: 0.80720819<br />xend: 55.000000<br />yend: 0.00000000",null,"x: 55.500000<br />y: 0.80720819<br />xend: 56.000000<br />yend: 0.80720819","x: 55.500000<br />y: 0.80720819<br />xend: 56.000000<br />yend: 0.80720819",null,"x: 56.000000<br />y: 0.80720819<br />xend: 56.000000<br />yend: 0.00000000","x: 56.000000<br />y: 0.80720819<br />xend: 56.000000<br />yend: 0.00000000",null,"x: 74.492188<br />y: 2.54353396<br />xend: 66.296875<br />yend: 2.54353396","x: 74.492188<br />y: 2.54353396<br />xend: 66.296875<br />yend: 2.54353396",null,"x: 66.296875<br />y: 2.54353396<br />xend: 66.296875<br />yend: 1.90143524","x: 66.296875<br />y: 2.54353396<br />xend: 66.296875<br />yend: 1.90143524",null,"x: 74.492188<br />y: 2.54353396<br />xend: 82.687500<br />yend: 2.54353396","x: 74.492188<br />y: 2.54353396<br />xend: 82.687500<br />yend: 2.54353396",null,"x: 82.687500<br />y: 2.54353396<br />xend: 82.687500<br />yend: 2.13787828","x: 82.687500<br />y: 2.54353396<br />xend: 82.687500<br />yend: 2.13787828",null,"x: 66.296875<br />y: 1.90143524<br />xend: 60.875000<br />yend: 1.90143524","x: 66.296875<br />y: 1.90143524<br />xend: 60.875000<br />yend: 1.90143524",null,"x: 60.875000<br />y: 1.90143524<br />xend: 60.875000<br />yend: 1.26144845","x: 60.875000<br />y: 1.90143524<br />xend: 60.875000<br />yend: 1.26144845",null,"x: 66.296875<br />y: 1.90143524<br />xend: 71.718750<br />yend: 1.90143524","x: 66.296875<br />y: 1.90143524<br />xend: 71.718750<br />yend: 1.90143524",null,"x: 71.718750<br />y: 1.90143524<br />xend: 71.718750<br />yend: 1.71928582","x: 71.718750<br />y: 1.90143524<br />xend: 71.718750<br />yend: 1.71928582",null,"x: 60.875000<br />y: 1.26144845<br />xend: 58.500000<br />yend: 1.26144845","x: 60.875000<br />y: 1.26144845<br />xend: 58.500000<br />yend: 1.26144845",null,"x: 58.500000<br />y: 1.26144845<br />xend: 58.500000<br />yend: 0.78810922","x: 58.500000<br />y: 1.26144845<br />xend: 58.500000<br />yend: 0.78810922",null,"x: 60.875000<br />y: 1.26144845<br />xend: 63.250000<br />yend: 1.26144845","x: 60.875000<br />y: 1.26144845<br />xend: 63.250000<br />yend: 1.26144845",null,"x: 63.250000<br />y: 1.26144845<br />xend: 63.250000<br />yend: 1.10166905","x: 63.250000<br />y: 1.26144845<br />xend: 63.250000<br />yend: 1.10166905",null,"x: 58.500000<br />y: 0.78810922<br />xend: 57.500000<br />yend: 0.78810922","x: 58.500000<br />y: 0.78810922<br />xend: 57.500000<br />yend: 0.78810922",null,"x: 57.500000<br />y: 0.78810922<br />xend: 57.500000<br />yend: 0.61008043","x: 57.500000<br />y: 0.78810922<br />xend: 57.500000<br />yend: 0.61008043",null,"x: 58.500000<br />y: 0.78810922<br />xend: 59.500000<br />yend: 0.78810922","x: 58.500000<br />y: 0.78810922<br />xend: 59.500000<br />yend: 0.78810922",null,"x: 59.500000<br />y: 0.78810922<br />xend: 59.500000<br />yend: 0.72358376","x: 59.500000<br />y: 0.78810922<br />xend: 59.500000<br />yend: 0.72358376",null,"x: 57.500000<br />y: 0.61008043<br />xend: 57.000000<br />yend: 0.61008043","x: 57.500000<br />y: 0.61008043<br />xend: 57.000000<br />yend: 0.61008043",null,"x: 57.000000<br />y: 0.61008043<br />xend: 57.000000<br />yend: 0.00000000","x: 57.000000<br />y: 0.61008043<br />xend: 57.000000<br />yend: 0.00000000",null,"x: 57.500000<br />y: 0.61008043<br />xend: 58.000000<br />yend: 0.61008043","x: 57.500000<br />y: 0.61008043<br />xend: 58.000000<br />yend: 0.61008043",null,"x: 58.000000<br />y: 0.61008043<br />xend: 58.000000<br />yend: 0.00000000","x: 58.000000<br />y: 0.61008043<br />xend: 58.000000<br />yend: 0.00000000",null,"x: 59.500000<br />y: 0.72358376<br />xend: 59.000000<br />yend: 0.72358376","x: 59.500000<br />y: 0.72358376<br />xend: 59.000000<br />yend: 0.72358376",null,"x: 59.000000<br />y: 0.72358376<br />xend: 59.000000<br />yend: 0.00000000","x: 59.000000<br />y: 0.72358376<br />xend: 59.000000<br />yend: 0.00000000",null,"x: 59.500000<br />y: 0.72358376<br />xend: 60.000000<br />yend: 0.72358376","x: 59.500000<br />y: 0.72358376<br />xend: 60.000000<br />yend: 0.72358376",null,"x: 60.000000<br />y: 0.72358376<br />xend: 60.000000<br />yend: 0.00000000","x: 60.000000<br />y: 0.72358376<br />xend: 60.000000<br />yend: 0.00000000",null,"x: 63.250000<br />y: 1.10166905<br />xend: 61.750000<br />yend: 1.10166905","x: 63.250000<br />y: 1.10166905<br />xend: 61.750000<br />yend: 1.10166905",null,"x: 61.750000<br />y: 1.10166905<br />xend: 61.750000<br />yend: 0.86117482","x: 61.750000<br />y: 1.10166905<br />xend: 61.750000<br />yend: 0.86117482",null,"x: 63.250000<br />y: 1.10166905<br />xend: 64.750000<br />yend: 1.10166905","x: 63.250000<br />y: 1.10166905<br />xend: 64.750000<br />yend: 1.10166905",null,"x: 64.750000<br />y: 1.10166905<br />xend: 64.750000<br />yend: 0.96860307","x: 64.750000<br />y: 1.10166905<br />xend: 64.750000<br />yend: 0.96860307",null,"x: 61.750000<br />y: 0.86117482<br />xend: 61.000000<br />yend: 0.86117482","x: 61.750000<br />y: 0.86117482<br />xend: 61.000000<br />yend: 0.86117482",null,"x: 61.000000<br />y: 0.86117482<br />xend: 61.000000<br />yend: 0.00000000","x: 61.000000<br />y: 0.86117482<br />xend: 61.000000<br />yend: 0.00000000",null,"x: 61.750000<br />y: 0.86117482<br />xend: 62.500000<br />yend: 0.86117482","x: 61.750000<br />y: 0.86117482<br />xend: 62.500000<br />yend: 0.86117482",null,"x: 62.500000<br />y: 0.86117482<br />xend: 62.500000<br />yend: 0.52082633","x: 62.500000<br />y: 0.86117482<br />xend: 62.500000<br />yend: 0.52082633",null,"x: 62.500000<br />y: 0.52082633<br />xend: 62.000000<br />yend: 0.52082633","x: 62.500000<br />y: 0.52082633<br />xend: 62.000000<br />yend: 0.52082633",null,"x: 62.000000<br />y: 0.52082633<br />xend: 62.000000<br />yend: 0.00000000","x: 62.000000<br />y: 0.52082633<br />xend: 62.000000<br />yend: 0.00000000",null,"x: 62.500000<br />y: 0.52082633<br />xend: 63.000000<br />yend: 0.52082633","x: 62.500000<br />y: 0.52082633<br />xend: 63.000000<br />yend: 0.52082633",null,"x: 63.000000<br />y: 0.52082633<br />xend: 63.000000<br />yend: 0.00000000","x: 63.000000<br />y: 0.52082633<br />xend: 63.000000<br />yend: 0.00000000",null,"x: 64.750000<br />y: 0.96860307<br />xend: 64.000000<br />yend: 0.96860307","x: 64.750000<br />y: 0.96860307<br />xend: 64.000000<br />yend: 0.96860307",null,"x: 64.000000<br />y: 0.96860307<br />xend: 64.000000<br />yend: 0.00000000","x: 64.000000<br />y: 0.96860307<br />xend: 64.000000<br />yend: 0.00000000",null,"x: 64.750000<br />y: 0.96860307<br />xend: 65.500000<br />yend: 0.96860307","x: 64.750000<br />y: 0.96860307<br />xend: 65.500000<br />yend: 0.96860307",null,"x: 65.500000<br />y: 0.96860307<br />xend: 65.500000<br />yend: 0.47008362","x: 65.500000<br />y: 0.96860307<br />xend: 65.500000<br />yend: 0.47008362",null,"x: 65.500000<br />y: 0.47008362<br />xend: 65.000000<br />yend: 0.47008362","x: 65.500000<br />y: 0.47008362<br />xend: 65.000000<br />yend: 0.47008362",null,"x: 65.000000<br />y: 0.47008362<br />xend: 65.000000<br />yend: 0.00000000","x: 65.000000<br />y: 0.47008362<br />xend: 65.000000<br />yend: 0.00000000",null,"x: 65.500000<br />y: 0.47008362<br />xend: 66.000000<br />yend: 0.47008362","x: 65.500000<br />y: 0.47008362<br />xend: 66.000000<br />yend: 0.47008362",null,"x: 66.000000<br />y: 0.47008362<br />xend: 66.000000<br />yend: 0.00000000","x: 66.000000<br />y: 0.47008362<br />xend: 66.000000<br />yend: 0.00000000",null,"x: 71.718750<br />y: 1.71928582<br />xend: 67.937500<br />yend: 1.71928582","x: 71.718750<br />y: 1.71928582<br />xend: 67.937500<br />yend: 1.71928582",null,"x: 67.937500<br />y: 1.71928582<br />xend: 67.937500<br />yend: 1.08791486","x: 67.937500<br />y: 1.71928582<br />xend: 67.937500<br />yend: 1.08791486",null,"x: 71.718750<br />y: 1.71928582<br />xend: 75.500000<br />yend: 1.71928582","x: 71.718750<br />y: 1.71928582<br />xend: 75.500000<br />yend: 1.71928582",null,"x: 75.500000<br />y: 1.71928582<br />xend: 75.500000<br />yend: 1.37884003","x: 75.500000<br />y: 1.71928582<br />xend: 75.500000<br />yend: 1.37884003",null,"x: 67.937500<br />y: 1.08791486<br />xend: 67.000000<br />yend: 1.08791486","x: 67.937500<br />y: 1.08791486<br />xend: 67.000000<br />yend: 1.08791486",null,"x: 67.000000<br />y: 1.08791486<br />xend: 67.000000<br />yend: 0.00000000","x: 67.000000<br />y: 1.08791486<br />xend: 67.000000<br />yend: 0.00000000",null,"x: 67.937500<br />y: 1.08791486<br />xend: 68.875000<br />yend: 1.08791486","x: 67.937500<br />y: 1.08791486<br />xend: 68.875000<br />yend: 1.08791486",null,"x: 68.875000<br />y: 1.08791486<br />xend: 68.875000<br />yend: 1.03201609","x: 68.875000<br />y: 1.08791486<br />xend: 68.875000<br />yend: 1.03201609",null,"x: 68.875000<br />y: 1.03201609<br />xend: 68.000000<br />yend: 1.03201609","x: 68.875000<br />y: 1.03201609<br />xend: 68.000000<br />yend: 1.03201609",null,"x: 68.000000<br />y: 1.03201609<br />xend: 68.000000<br />yend: 0.00000000","x: 68.000000<br />y: 1.03201609<br />xend: 68.000000<br />yend: 0.00000000",null,"x: 68.875000<br />y: 1.03201609<br />xend: 69.750000<br />yend: 1.03201609","x: 68.875000<br />y: 1.03201609<br />xend: 69.750000<br />yend: 1.03201609",null,"x: 69.750000<br />y: 1.03201609<br />xend: 69.750000<br />yend: 0.71658978","x: 69.750000<br />y: 1.03201609<br />xend: 69.750000<br />yend: 0.71658978",null,"x: 69.750000<br />y: 0.71658978<br />xend: 69.000000<br />yend: 0.71658978","x: 69.750000<br />y: 0.71658978<br />xend: 69.000000<br />yend: 0.71658978",null,"x: 69.000000<br />y: 0.71658978<br />xend: 69.000000<br />yend: 0.00000000","x: 69.000000<br />y: 0.71658978<br />xend: 69.000000<br />yend: 0.00000000",null,"x: 69.750000<br />y: 0.71658978<br />xend: 70.500000<br />yend: 0.71658978","x: 69.750000<br />y: 0.71658978<br />xend: 70.500000<br />yend: 0.71658978",null,"x: 70.500000<br />y: 0.71658978<br />xend: 70.500000<br />yend: 0.39223098","x: 70.500000<br />y: 0.71658978<br />xend: 70.500000<br />yend: 0.39223098",null,"x: 70.500000<br />y: 0.39223098<br />xend: 70.000000<br />yend: 0.39223098","x: 70.500000<br />y: 0.39223098<br />xend: 70.000000<br />yend: 0.39223098",null,"x: 70.000000<br />y: 0.39223098<br />xend: 70.000000<br />yend: 0.00000000","x: 70.000000<br />y: 0.39223098<br />xend: 70.000000<br />yend: 0.00000000",null,"x: 70.500000<br />y: 0.39223098<br />xend: 71.000000<br />yend: 0.39223098","x: 70.500000<br />y: 0.39223098<br />xend: 71.000000<br />yend: 0.39223098",null,"x: 71.000000<br />y: 0.39223098<br />xend: 71.000000<br />yend: 0.00000000","x: 71.000000<br />y: 0.39223098<br />xend: 71.000000<br />yend: 0.00000000",null,"x: 75.500000<br />y: 1.37884003<br />xend: 73.250000<br />yend: 1.37884003","x: 75.500000<br />y: 1.37884003<br />xend: 73.250000<br />yend: 1.37884003",null,"x: 73.250000<br />y: 1.37884003<br />xend: 73.250000<br />yend: 1.05901454","x: 73.250000<br />y: 1.37884003<br />xend: 73.250000<br />yend: 1.05901454",null,"x: 75.500000<br />y: 1.37884003<br />xend: 77.750000<br />yend: 1.37884003","x: 75.500000<br />y: 1.37884003<br />xend: 77.750000<br />yend: 1.37884003",null,"x: 77.750000<br />y: 1.37884003<br />xend: 77.750000<br />yend: 1.19030545","x: 77.750000<br />y: 1.37884003<br />xend: 77.750000<br />yend: 1.19030545",null,"x: 73.250000<br />y: 1.05901454<br />xend: 72.000000<br />yend: 1.05901454","x: 73.250000<br />y: 1.05901454<br />xend: 72.000000<br />yend: 1.05901454",null,"x: 72.000000<br />y: 1.05901454<br />xend: 72.000000<br />yend: 0.00000000","x: 72.000000<br />y: 1.05901454<br />xend: 72.000000<br />yend: 0.00000000",null,"x: 73.250000<br />y: 1.05901454<br />xend: 74.500000<br />yend: 1.05901454","x: 73.250000<br />y: 1.05901454<br />xend: 74.500000<br />yend: 1.05901454",null,"x: 74.500000<br />y: 1.05901454<br />xend: 74.500000<br />yend: 0.98961377","x: 74.500000<br />y: 1.05901454<br />xend: 74.500000<br />yend: 0.98961377",null,"x: 74.500000<br />y: 0.98961377<br />xend: 73.500000<br />yend: 0.98961377","x: 74.500000<br />y: 0.98961377<br />xend: 73.500000<br />yend: 0.98961377",null,"x: 73.500000<br />y: 0.98961377<br />xend: 73.500000<br />yend: 0.70742390","x: 73.500000<br />y: 0.98961377<br />xend: 73.500000<br />yend: 0.70742390",null,"x: 74.500000<br />y: 0.98961377<br />xend: 75.500000<br />yend: 0.98961377","x: 74.500000<br />y: 0.98961377<br />xend: 75.500000<br />yend: 0.98961377",null,"x: 75.500000<br />y: 0.98961377<br />xend: 75.500000<br />yend: 0.72415977","x: 75.500000<br />y: 0.98961377<br />xend: 75.500000<br />yend: 0.72415977",null,"x: 73.500000<br />y: 0.70742390<br />xend: 73.000000<br />yend: 0.70742390","x: 73.500000<br />y: 0.70742390<br />xend: 73.000000<br />yend: 0.70742390",null,"x: 73.000000<br />y: 0.70742390<br />xend: 73.000000<br />yend: 0.00000000","x: 73.000000<br />y: 0.70742390<br />xend: 73.000000<br />yend: 0.00000000",null,"x: 73.500000<br />y: 0.70742390<br />xend: 74.000000<br />yend: 0.70742390","x: 73.500000<br />y: 0.70742390<br />xend: 74.000000<br />yend: 0.70742390",null,"x: 74.000000<br />y: 0.70742390<br />xend: 74.000000<br />yend: 0.00000000","x: 74.000000<br />y: 0.70742390<br />xend: 74.000000<br />yend: 0.00000000",null,"x: 75.500000<br />y: 0.72415977<br />xend: 75.000000<br />yend: 0.72415977","x: 75.500000<br />y: 0.72415977<br />xend: 75.000000<br />yend: 0.72415977",null,"x: 75.000000<br />y: 0.72415977<br />xend: 75.000000<br />yend: 0.00000000","x: 75.000000<br />y: 0.72415977<br />xend: 75.000000<br />yend: 0.00000000",null,"x: 75.500000<br />y: 0.72415977<br />xend: 76.000000<br />yend: 0.72415977","x: 75.500000<br />y: 0.72415977<br />xend: 76.000000<br />yend: 0.72415977",null,"x: 76.000000<br />y: 0.72415977<br />xend: 76.000000<br />yend: 0.00000000","x: 76.000000<br />y: 0.72415977<br />xend: 76.000000<br />yend: 0.00000000",null,"x: 77.750000<br />y: 1.19030545<br />xend: 77.000000<br />yend: 1.19030545","x: 77.750000<br />y: 1.19030545<br />xend: 77.000000<br />yend: 1.19030545",null,"x: 77.000000<br />y: 1.19030545<br />xend: 77.000000<br />yend: 0.00000000","x: 77.000000<br />y: 1.19030545<br />xend: 77.000000<br />yend: 0.00000000",null,"x: 77.750000<br />y: 1.19030545<br />xend: 78.500000<br />yend: 1.19030545","x: 77.750000<br />y: 1.19030545<br />xend: 78.500000<br />yend: 1.19030545",null,"x: 78.500000<br />y: 1.19030545<br />xend: 78.500000<br />yend: 0.79401748","x: 78.500000<br />y: 1.19030545<br />xend: 78.500000<br />yend: 0.79401748",null,"x: 78.500000<br />y: 0.79401748<br />xend: 78.000000<br />yend: 0.79401748","x: 78.500000<br />y: 0.79401748<br />xend: 78.000000<br />yend: 0.79401748",null,"x: 78.000000<br />y: 0.79401748<br />xend: 78.000000<br />yend: 0.00000000","x: 78.000000<br />y: 0.79401748<br />xend: 78.000000<br />yend: 0.00000000",null,"x: 78.500000<br />y: 0.79401748<br />xend: 79.000000<br />yend: 0.79401748","x: 78.500000<br />y: 0.79401748<br />xend: 79.000000<br />yend: 0.79401748",null,"x: 79.000000<br />y: 0.79401748<br />xend: 79.000000<br />yend: 0.00000000","x: 79.000000<br />y: 0.79401748<br />xend: 79.000000<br />yend: 0.00000000",null,"x: 82.687500<br />y: 2.13787828<br />xend: 80.500000<br />yend: 2.13787828","x: 82.687500<br />y: 2.13787828<br />xend: 80.500000<br />yend: 2.13787828",null,"x: 80.500000<br />y: 2.13787828<br />xend: 80.500000<br />yend: 1.33055334","x: 80.500000<br />y: 2.13787828<br />xend: 80.500000<br />yend: 1.33055334",null,"x: 82.687500<br />y: 2.13787828<br />xend: 84.875000<br />yend: 2.13787828","x: 82.687500<br />y: 2.13787828<br />xend: 84.875000<br />yend: 2.13787828",null,"x: 84.875000<br />y: 2.13787828<br />xend: 84.875000<br />yend: 1.69582192","x: 84.875000<br />y: 2.13787828<br />xend: 84.875000<br />yend: 1.69582192",null,"x: 80.500000<br />y: 1.33055334<br />xend: 80.000000<br />yend: 1.33055334","x: 80.500000<br />y: 1.33055334<br />xend: 80.000000<br />yend: 1.33055334",null,"x: 80.000000<br />y: 1.33055334<br />xend: 80.000000<br />yend: 0.00000000","x: 80.000000<br />y: 1.33055334<br />xend: 80.000000<br />yend: 0.00000000",null,"x: 80.500000<br />y: 1.33055334<br />xend: 81.000000<br />yend: 1.33055334","x: 80.500000<br />y: 1.33055334<br />xend: 81.000000<br />yend: 1.33055334",null,"x: 81.000000<br />y: 1.33055334<br />xend: 81.000000<br />yend: 0.00000000","x: 81.000000<br />y: 1.33055334<br />xend: 81.000000<br />yend: 0.00000000",null,"x: 84.875000<br />y: 1.69582192<br />xend: 82.750000<br />yend: 1.69582192","x: 84.875000<br />y: 1.69582192<br />xend: 82.750000<br />yend: 1.69582192",null,"x: 82.750000<br />y: 1.69582192<br />xend: 82.750000<br />yend: 1.02970713","x: 82.750000<br />y: 1.69582192<br />xend: 82.750000<br />yend: 1.02970713",null,"x: 84.875000<br />y: 1.69582192<br />xend: 87.000000<br />yend: 1.69582192","x: 84.875000<br />y: 1.69582192<br />xend: 87.000000<br />yend: 1.69582192",null,"x: 87.000000<br />y: 1.69582192<br />xend: 87.000000<br />yend: 1.42553794","x: 87.000000<br />y: 1.69582192<br />xend: 87.000000<br />yend: 1.42553794",null,"x: 82.750000<br />y: 1.02970713<br />xend: 82.000000<br />yend: 1.02970713","x: 82.750000<br />y: 1.02970713<br />xend: 82.000000<br />yend: 1.02970713",null,"x: 82.000000<br />y: 1.02970713<br />xend: 82.000000<br />yend: 0.00000000","x: 82.000000<br />y: 1.02970713<br />xend: 82.000000<br />yend: 0.00000000",null,"x: 82.750000<br />y: 1.02970713<br />xend: 83.500000<br />yend: 1.02970713","x: 82.750000<br />y: 1.02970713<br />xend: 83.500000<br />yend: 1.02970713",null,"x: 83.500000<br />y: 1.02970713<br />xend: 83.500000<br />yend: 0.91370624","x: 83.500000<br />y: 1.02970713<br />xend: 83.500000<br />yend: 0.91370624",null,"x: 83.500000<br />y: 0.91370624<br />xend: 83.000000<br />yend: 0.91370624","x: 83.500000<br />y: 0.91370624<br />xend: 83.000000<br />yend: 0.91370624",null,"x: 83.000000<br />y: 0.91370624<br />xend: 83.000000<br />yend: 0.00000000","x: 83.000000<br />y: 0.91370624<br />xend: 83.000000<br />yend: 0.00000000",null,"x: 83.500000<br />y: 0.91370624<br />xend: 84.000000<br />yend: 0.91370624","x: 83.500000<br />y: 0.91370624<br />xend: 84.000000<br />yend: 0.91370624",null,"x: 84.000000<br />y: 0.91370624<br />xend: 84.000000<br />yend: 0.00000000","x: 84.000000<br />y: 0.91370624<br />xend: 84.000000<br />yend: 0.00000000",null,"x: 87.000000<br />y: 1.42553794<br />xend: 85.500000<br />yend: 1.42553794","x: 87.000000<br />y: 1.42553794<br />xend: 85.500000<br />yend: 1.42553794",null,"x: 85.500000<br />y: 1.42553794<br />xend: 85.500000<br />yend: 0.86902924","x: 85.500000<br />y: 1.42553794<br />xend: 85.500000<br />yend: 0.86902924",null,"x: 87.000000<br />y: 1.42553794<br />xend: 88.500000<br />yend: 1.42553794","x: 87.000000<br />y: 1.42553794<br />xend: 88.500000<br />yend: 1.42553794",null,"x: 88.500000<br />y: 1.42553794<br />xend: 88.500000<br />yend: 1.13153838","x: 88.500000<br />y: 1.42553794<br />xend: 88.500000<br />yend: 1.13153838",null,"x: 85.500000<br />y: 0.86902924<br />xend: 85.000000<br />yend: 0.86902924","x: 85.500000<br />y: 0.86902924<br />xend: 85.000000<br />yend: 0.86902924",null,"x: 85.000000<br />y: 0.86902924<br />xend: 85.000000<br />yend: 0.00000000","x: 85.000000<br />y: 0.86902924<br />xend: 85.000000<br />yend: 0.00000000",null,"x: 85.500000<br />y: 0.86902924<br />xend: 86.000000<br />yend: 0.86902924","x: 85.500000<br />y: 0.86902924<br />xend: 86.000000<br />yend: 0.86902924",null,"x: 86.000000<br />y: 0.86902924<br />xend: 86.000000<br />yend: 0.00000000","x: 86.000000<br />y: 0.86902924<br />xend: 86.000000<br />yend: 0.00000000",null,"x: 88.500000<br />y: 1.13153838<br />xend: 87.500000<br />yend: 1.13153838","x: 88.500000<br />y: 1.13153838<br />xend: 87.500000<br />yend: 1.13153838",null,"x: 87.500000<br />y: 1.13153838<br />xend: 87.500000<br />yend: 0.51536570","x: 87.500000<br />y: 1.13153838<br />xend: 87.500000<br />yend: 0.51536570",null,"x: 88.500000<br />y: 1.13153838<br />xend: 89.500000<br />yend: 1.13153838","x: 88.500000<br />y: 1.13153838<br />xend: 89.500000<br />yend: 1.13153838",null,"x: 89.500000<br />y: 1.13153838<br />xend: 89.500000<br />yend: 0.59317610","x: 89.500000<br />y: 1.13153838<br />xend: 89.500000<br />yend: 0.59317610",null,"x: 87.500000<br />y: 0.51536570<br />xend: 87.000000<br />yend: 0.51536570","x: 87.500000<br />y: 0.51536570<br />xend: 87.000000<br />yend: 0.51536570",null,"x: 87.000000<br />y: 0.51536570<br />xend: 87.000000<br />yend: 0.00000000","x: 87.000000<br />y: 0.51536570<br />xend: 87.000000<br />yend: 0.00000000",null,"x: 87.500000<br />y: 0.51536570<br />xend: 88.000000<br />yend: 0.51536570","x: 87.500000<br />y: 0.51536570<br />xend: 88.000000<br />yend: 0.51536570",null,"x: 88.000000<br />y: 0.51536570<br />xend: 88.000000<br />yend: 0.00000000","x: 88.000000<br />y: 0.51536570<br />xend: 88.000000<br />yend: 0.00000000",null,"x: 89.500000<br />y: 0.59317610<br />xend: 89.000000<br />yend: 0.59317610","x: 89.500000<br />y: 0.59317610<br />xend: 89.000000<br />yend: 0.59317610",null,"x: 89.000000<br />y: 0.59317610<br />xend: 89.000000<br />yend: 0.00000000","x: 89.000000<br />y: 0.59317610<br />xend: 89.000000<br />yend: 0.00000000",null,"x: 89.500000<br />y: 0.59317610<br />xend: 90.000000<br />yend: 0.59317610","x: 89.500000<br />y: 0.59317610<br />xend: 90.000000<br />yend: 0.59317610",null,"x: 90.000000<br />y: 0.59317610<br />xend: 90.000000<br />yend: 0.00000000","x: 90.000000<br />y: 0.59317610<br />xend: 90.000000<br />yend: 0.00000000"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90],"y":[-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003,-0.050000000000000003],"text":["berend-b-2","aleksandra-b-1","reinout-w-2","erik-l-1","tymon-z-2","ruishan-h-1","sytze-m-2","erik-l-2","lo-l-1","lo-l-2","filip-z-1","raphael-h-1","tymon-z-1","lai-z-1","thomas-r-2","evan-l-1","jelle-w-1","jelle-w-2","thomas-r-1","wietske-b-1","marit-r-2","ahram-j-2","jasper-v-1","jasper-v-2","desmond-l-2","wijnand-h-1","gijs-s-2","ellen-r-1.mp3","ellen-r-2.mp3","lesley-n-1","ties-o-2","desmond-l-1","lennart-p-2","ties-o-1","mees-k-2","bram-d-2","marit-r-1","popke-s-2","roemer-i-1","reinout-w-1","hidde-s-2","senn-v-1","judith-h-1","ke-w-1","sanne-o.2","evan-l-2","mette-l-1","senn-v-2","berend-b-1","mette-l-2","gijs-s-1","wijnand-h-2","isa-h-2","tuna-a-1","lai-z-2","thijmen-g-1","mees-k-1","xuelong-f-1","aleksandra-b-2","judith-h-2","lesley-n-2","sarya-n-1","bram-d-1","sarya-n-2","ahram-j-1","raphael-h-2","thijmen-g-2","cecilia-b-1","sytze-m-1","sanne-o-1","cecilia-b-2","lennart-p-1","ke-w-2","sven-n-2","sven-n-1","isa-h-1","ruishan-h-2","lucas-w-1","lucas-w-2","sanne-v-2","filip-z-2","sanne-v-1","roemer-i-2","wietske-b-2","popke-s-1","tuna-a-2","hidde-s-1","xuelong-f-2"],"hovertext":["x:  1<br />-0.05: -0.05<br />label: berend-b-2<br />color: gray","x:  2<br />-0.05: -0.05<br />label: aleksandra-b-1<br />color: gray","x:  3<br />-0.05: -0.05<br />label: reinout-w-2<br />color: gray","x:  4<br />-0.05: -0.05<br />label: erik-l-1<br />color: gray","x:  6<br />-0.05: -0.05<br />label: tymon-z-2<br />color: gray","x:  7<br />-0.05: -0.05<br />label: ruishan-h-1<br />color: gray","x:  8<br />-0.05: -0.05<br />label: sytze-m-2<br />color: gray","x:  9<br />-0.05: -0.05<br />label: erik-l-2<br />color: gray","x: 10<br />-0.05: -0.05<br />label: lo-l-1<br />color: gray","x: 11<br />-0.05: -0.05<br />label: lo-l-2<br />color: gray","x: 12<br />-0.05: -0.05<br />label: filip-z-1<br />color: gray","x: 13<br />-0.05: -0.05<br />label: raphael-h-1<br />color: gray","x: 14<br />-0.05: -0.05<br />label: tymon-z-1<br />color: gray","x: 15<br />-0.05: -0.05<br />label: lai-z-1<br />color: gray","x: 16<br />-0.05: -0.05<br />label: thomas-r-2<br />color: gray","x: 17<br />-0.05: -0.05<br />label: evan-l-1<br />color: gray","x: 18<br />-0.05: -0.05<br />label: jelle-w-1<br />color: gray","x: 19<br />-0.05: -0.05<br />label: jelle-w-2<br />color: gray","x: 21<br />-0.05: -0.05<br />label: thomas-r-1<br />color: gray","x: 22<br />-0.05: -0.05<br />label: wietske-b-1<br />color: gray","x: 23<br />-0.05: -0.05<br />label: marit-r-2<br />color: gray","x: 24<br />-0.05: -0.05<br />label: ahram-j-2<br />color: gray","x: 25<br />-0.05: -0.05<br />label: jasper-v-1<br />color: gray","x: 26<br />-0.05: -0.05<br />label: jasper-v-2<br />color: gray","x: 27<br />-0.05: -0.05<br />label: desmond-l-2<br />color: gray","x: 28<br />-0.05: -0.05<br />label: wijnand-h-1<br />color: gray","x: 29<br />-0.05: -0.05<br />label: gijs-s-2<br />color: gray","x: 30<br />-0.05: -0.05<br />label: ellen-r-1.mp3<br />color: gray","x: 31<br />-0.05: -0.05<br />label: ellen-r-2.mp3<br />color: gray","x: 32<br />-0.05: -0.05<br />label: lesley-n-1<br />color: gray","x: 33<br />-0.05: -0.05<br />label: ties-o-2<br />color: gray","x: 34<br />-0.05: -0.05<br />label: desmond-l-1<br />color: gray","x: 35<br />-0.05: -0.05<br />label: lennart-p-2<br />color: gray","x: 36<br />-0.05: -0.05<br />label: ties-o-1<br />color: gray","x: 37<br />-0.05: -0.05<br />label: mees-k-2<br />color: gray","x: 38<br />-0.05: -0.05<br />label: bram-d-2<br />color: gray","x: 39<br />-0.05: -0.05<br />label: marit-r-1<br />color: gray","x: 40<br />-0.05: -0.05<br />label: popke-s-2<br />color: gray","x: 41<br />-0.05: -0.05<br />label: roemer-i-1<br />color: gray","x: 42<br />-0.05: -0.05<br />label: reinout-w-1<br />color: gray","x: 43<br />-0.05: -0.05<br />label: hidde-s-2<br />color: gray","x: 44<br />-0.05: -0.05<br />label: senn-v-1<br />color: gray","x: 45<br />-0.05: -0.05<br />label: judith-h-1<br />color: gray","x: 46<br />-0.05: -0.05<br />label: ke-w-1<br />color: gray","x: 47<br />-0.05: -0.05<br />label: sanne-o.2<br />color: gray","x: 48<br />-0.05: -0.05<br />label: evan-l-2<br />color: gray","x: 49<br />-0.05: -0.05<br />label: mette-l-1<br />color: gray","x: 50<br />-0.05: -0.05<br />label: senn-v-2<br />color: gray","x: 51<br />-0.05: -0.05<br />label: berend-b-1<br />color: gray","x: 52<br />-0.05: -0.05<br />label: mette-l-2<br />color: gray","x: 53<br />-0.05: -0.05<br />label: gijs-s-1<br />color: gray","x: 54<br />-0.05: -0.05<br />label: wijnand-h-2<br />color: gray","x: 55<br />-0.05: -0.05<br />label: isa-h-2<br />color: gray","x: 56<br />-0.05: -0.05<br />label: tuna-a-1<br />color: gray","x: 57<br />-0.05: -0.05<br />label: lai-z-2<br />color: gray","x: 58<br />-0.05: -0.05<br />label: thijmen-g-1<br />color: gray","x: 59<br />-0.05: -0.05<br />label: mees-k-1<br />color: gray","x: 60<br />-0.05: -0.05<br />label: xuelong-f-1<br />color: gray","x: 61<br />-0.05: -0.05<br />label: aleksandra-b-2<br />color: gray","x: 62<br />-0.05: -0.05<br />label: judith-h-2<br />color: gray","x: 63<br />-0.05: -0.05<br />label: lesley-n-2<br />color: gray","x: 64<br />-0.05: -0.05<br />label: sarya-n-1<br />color: gray","x: 65<br />-0.05: -0.05<br />label: bram-d-1<br />color: gray","x: 66<br />-0.05: -0.05<br />label: sarya-n-2<br />color: gray","x: 67<br />-0.05: -0.05<br />label: ahram-j-1<br />color: gray","x: 68<br />-0.05: -0.05<br />label: raphael-h-2<br />color: gray","x: 69<br />-0.05: -0.05<br />label: thijmen-g-2<br />color: gray","x: 70<br />-0.05: -0.05<br />label: cecilia-b-1<br />color: gray","x: 71<br />-0.05: -0.05<br />label: sytze-m-1<br />color: gray","x: 72<br />-0.05: -0.05<br />label: sanne-o-1<br />color: gray","x: 73<br />-0.05: -0.05<br />label: cecilia-b-2<br />color: gray","x: 74<br />-0.05: -0.05<br />label: lennart-p-1<br />color: gray","x: 75<br />-0.05: -0.05<br />label: ke-w-2<br />color: gray","x: 76<br />-0.05: -0.05<br />label: sven-n-2<br />color: gray","x: 77<br />-0.05: -0.05<br />label: sven-n-1<br />color: gray","x: 78<br />-0.05: -0.05<br />label: isa-h-1<br />color: gray","x: 79<br />-0.05: -0.05<br />label: ruishan-h-2<br />color: gray","x: 80<br />-0.05: -0.05<br />label: lucas-w-1<br />color: gray","x: 81<br />-0.05: -0.05<br />label: lucas-w-2<br />color: gray","x: 82<br />-0.05: -0.05<br />label: sanne-v-2<br />color: gray","x: 83<br />-0.05: -0.05<br />label: filip-z-2<br />color: gray","x: 84<br />-0.05: -0.05<br />label: sanne-v-1<br />color: gray","x: 85<br />-0.05: -0.05<br />label: roemer-i-2<br />color: gray","x: 86<br />-0.05: -0.05<br />label: wietske-b-2<br />color: gray","x: 87<br />-0.05: -0.05<br />label: popke-s-1<br />color: gray","x: 88<br />-0.05: -0.05<br />label: tuna-a-2<br />color: gray","x: 89<br />-0.05: -0.05<br />label: hidde-s-1<br />color: gray","x: 90<br />-0.05: -0.05<br />label: xuelong-f-2<br />color: gray"],"textfont":{"size":11.338582677165356,"color":"rgba(190,190,190,1)"},"type":"scatter","mode":"text","hoveron":"points","name":"gray","legendgroup":"gray","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[5,20],"y":[-0.050000000000000003,-0.050000000000000003],"text":["angelo-w-1","angelo-w-2"],"hovertext":["x:  5<br />-0.05: -0.05<br />label: angelo-w-1<br />color: red","x: 20<br />-0.05: -0.05<br />label: angelo-w-2<br />color: red"],"textfont":{"size":11.338582677165356,"color":"rgba(255,0,0,1)"},"type":"scatter","mode":"text","hoveron":"points","name":"red","legendgroup":"red","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":42.682549136390719,"r":7.3059360730593621,"b":12.801270597577929,"l":16.803652968036531},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Hierarchical Clustering of Tracks","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342468},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-3.4500000000000002,94.450000000000003],"tickmode":"array","ticktext":["0","25","50","75"],"tickvals":[0,25.000000000000004,50,75],"categoryorder":"array","categoryarray":["0","25","50","75"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":false,"tickfont":{"color":null,"family":null,"size":0},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.24184757022797593,3.978798974787495],"tickmode":"array","ticktext":["0","1","2","3"],"tickvals":[0,1,2,3],"categoryorder":"array","categoryarray":["0","1","2","3"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716894984},"title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"fec48da6b55":{"x":{},"y":{},"xend":{},"yend":{},"type":"scatter"},"fec56f316dd":{"x":{},"y":{},"label":{},"colour":{}}},"cur_data":"fec48da6b55","visdat":{"fec48da6b55":["function (y) ","x"],"fec56f316dd":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<hr />
+<p>The dendrogram generated from hierarchical clustering gives a deeper
+look into how my tracks relate to others in the corpus based on tempo,
+arousal, danceability, and instrumentalness. My tracks are highlighted
+in red for clarity. One of the most noticeable patterns is how tracks by
+the same artist often cluster closely together, implying that personal
+production habits and stylistic choices—such as consistent tempo ranges,
+rhythmic structures, or instrumental textures, strongly influence the
+numerical features used in the analysis. In the case of AI-generated
+tracks, this clustering might reflect the reuse of the same prompts or
+model parameters, which could result in tracks with nearly identical
+structural and timbral qualities. What this dendrogram reveals is that
+production method, whether human or machine, has a measurable impact on
+how tracks relate to each other in terms of computational features. My
+own tracks, though created with different tools and creative processes,
+appear near tracks with somewhat similar rhythmic and instrumental
+profiles, indicating that the features chosen for this analysis do
+capture meaningful musical relationships.</p>
+</div>
+<div id="conclusion" class="section level3 tabset">
+<h3 class="tabset">CONCLUSION</h3>
+<p>Looking at how my tracks compare to the broader corpus shows how data
+alone can’t fully capture creative intent — but it can reveal unexpected
+overlaps. Even though my two tracks are rooted in generative textures
+and vaporwave, inspired sampling, they sit comfortably within common
+tempo and danceability spaces. The clustering reinforces that
+similarities in production methods, whether AI or human-made, often
+leave measurable footprints in audio features. This section maps out the
+broader landscape, but to really understand what gives each track its
+personality, we need to zoom into their internal structure. So next, I
+dig into their harmonic and tonal identity through chroma-based
+analysis.</p>
+</div>
+</div>
+<div id="chroma-features" class="section level1 storyboard">
+<h1 class="storyboard">4. CHROMA FEATURES</h1>
+<div id="chordogram-track-1" class="section level3 tabset">
+<h3 class="tabset">CHORDOGRAM TRACK 1</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" width="576" data-figure-id=fig2 /></p>
+<hr />
+<p>The chordogram for Track 1 shows a gradually unfolding harmonic
+structure that doesn’t follow a strict progression. This makes sense
+given the track’s generative nature. The plot is dense with yellow and
+green bands, which point to a rich harmonic texture, while darker blue
+areas highlight brief transitions or shifts. Chords like B♭ major, G
+major, and C major surface often, suggesting potential tonal centers
+even in the absence of a formal structure. Early sections feel more
+harmonically saturated, while later parts become slightly more
+organized, likely due to the entrance of rhythmic elements such as the
+kick drum. This change marks a shift toward greater consistency,
+reflecting the evolving sound design choices. The way harmonic content
+morphs over time can be traced back to the macro oscillator modulations
+and RSVP’s random playback, which keep the piece fluid and
+unpredictable.</p>
+</div>
+<div id="chordogram-track-2" class="section level3">
+<h3>CHORDOGRAM TRACK 2</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="576" data-figure-id=fig3 /></p>
+<hr />
+<p>In contrast, Track 2’s chordogram feels more structured and
+harmonically dense. The instrumentation—electric guitar, jungle rhythms,
+ambient pads, and orchestral leads—results in a layered texture that
+keeps the harmonic space constantly in motion. Between 50 and 130
+seconds, the plot shows a high concentration of harmonic matches,
+suggesting that this part of the track leans into chord progressions
+more actively. Chords like C major, G major, and A minor occur
+repeatedly, hinting at established tonal centers and recurring motifs.
+Toward the end, broader yellow bands signal a move toward harmonic
+closure, where the progression settles into repeating patterns. This
+sense of resolution ties into the track’s vaporwave influence, where
+looping structures help stabilize an otherwise lush and spacious
+sound..</p>
+</div>
+<div id="keygram-track-1" class="section level3 tabset">
+<h3 class="tabset">KEYGRAM TRACK 1</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="576" data-figure-id=fig4 /></p>
+<hr />
+<p>Looking at the keygram for Track 1, the track again presents a
+drifting and ambiguous tonal landscape. The first minute is scattered
+with activity across various key templates, particularly in the upper
+major registers like B, D, and G. This kind of spread supports the idea
+that the harmonic content wasn’t deliberately constructed but emerged
+from real-time interactions between random sample playback and evolving
+oscillator parameters. There are also moments where the key clarity
+drops, likely reflecting noisier textures or percussive layers. In the
+last section, we see brief returns to keys like C major and F major,
+hinting at a faint harmonic resolution as the track winds down.</p>
+</div>
+<div id="keygram-track-2" class="section level3 tabset">
+<h3 class="tabset">KEYGRAM TRACK 2</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="576" data-figure-id=fig5 /></p>
+<hr />
+<p>Track 2’s keygram tells a different story. Throughout the piece,
+tonal stability is more evident, with keys like C minor, G minor, and F
+minor recurring often. These stable areas reflect a more intentional
+harmonic design, where loops and motifs revisit specific key centers.
+The dense layers of instrumentation don’t obscure this structure, but
+rather reinforce it. As the piece moves toward its end, keys like B♭
+minor and E♭ major begin to appear more prominently, possibly signifying
+a harmonic shift or conclusion. This tonal consistency aligns with the
+structure implied by the genre influences, maintaining a firm sense of
+musical form beneath the surface.</p>
+</div>
+<div id="chromagram-track-1" class="section level3 tabset">
+<h3 class="tabset">CHROMAGRAM TRACK 1</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="576" data-figure-id=fig6 /></p>
+<hr />
+<p>The chromagram for Track 1 reflects the ambient, meandering feel of
+the piece. Instead of vertical lines or consistent repetition, the pitch
+class activity spreads loosely across time. In the beginning, there’s a
+clear emphasis on F, likely serving as a harmonic anchor, but as the
+track progresses, notes like E, G, and F♯ start showing up with more
+regularity. Still, none dominate enough to define a key or establish
+repetition. This kind of chromatic diffusion aligns with the generative
+methods used in the track’s creation and complements the chordogram,
+which translates this pitch data into more musical terms. Together, they
+show that the track is less about conventional harmony and more about
+evolving tonal color.</p>
+</div>
+<div id="chromagram-track-2" class="section level3 tabset">
+<h3 class="tabset">CHROMAGRAM TRACK 2</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" width="576" data-figure-id=fig7 /></p>
+<hr />
+<p>For Track 2, the chromagram suggests a more dynamic and focused
+harmonic layout. The middle of the track lights up with activity across
+G, F, and E, indicating a harmonic movement that feels more deliberate.
+Compared to the fluid chroma distribution in Track 1, this one shows
+more consistency, though still avoiding rigid loops. By the end, notes
+like C and D grow stronger, hinting at a build-up or concluding shift.
+These evolving chromatic patterns match the genre blend of the track,
+where harmonic progressions support an overall dreamy and layered
+atmosphere.</p>
+</div>
+<div id="chroma-ssm-track-1" class="section level3 tabset">
+<h3 class="tabset">CHROMA SSM TRACK 1</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" width="576" data-figure-id=fig8 /></p>
+<hr />
+<p>In the chroma self-similarity matrix for Track 1, you see a plot of
+gradual evolution rather than structural repetition. There aren’t many
+strong diagonal lines, which you’d expect in a more traditional
+verse-chorus format. Instead, the visual is broken into evolving color
+patches, each representing subtle harmonic shifts. This reinforces the
+track’s freeform, ambient identity. Some more consistent blocks begin to
+appear in the last section, possibly when rhythmic layers bring
+stability to the soundscape. These patterns emphasize the piece’s
+reliance on gradual transformation over structured form.</p>
+</div>
+<div id="chroma-ssm-track-2" class="section level3 tabset">
+<h3 class="tabset">CHROMA SSM TRACK 2</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" width="576" data-figure-id=fig9 /></p>
+<hr />
+<p>The self-similarity plot for Track 2, on the other hand, is filled
+with repeating shapes and diagonals that suggest harmonic loops and
+structural callbacks. Especially in the final third, you see clear
+repetitions, pointing to recurring motifs or phrases. These kinds of
+patterns usually appear in music with stronger rhythmic or harmonic
+identities, which matches how this track was built. There’s more focus
+on arrangement, with defined sections that are repeated or revisited
+throughout. The SSM clearly illustrates that this piece was structured
+with a stronger sense of musical planning compared to the more
+spontaneous flow of Track 1.</p>
+</div>
+<div id="conclusion-1" class="section level3 tabset">
+<h3 class="tabset">CONCLUSION</h3>
+<p>Through chroma-based visualizations, it becomes clear that Track 1
+leans heavily into evolving harmonic textures, drifting between tonal
+centers with no set progression, a reflection of its generative and
+ambient roots. Track 2, meanwhile, maintains stronger key references and
+recurring chord structures, aligning with its sample-based, loop-driven
+nature. These differences in harmonic form act as a kind of musical
+skeleton, but to fully understand how each track feels, we also need to
+explore how energy and impact shift over time. That’s where the next
+section on loudness and energy comes in.</p>
+</div>
+</div>
+<div id="loudness-energy" class="section level1 storyboard">
+<h1 class="storyboard">5. LOUDNESS &amp; ENERGY</h1>
+<div id="energy-novelty-track-1" class="section level3 tabset">
+<h3 class="tabset">Energy Novelty TRACK 1</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" width="576" data-figure-id=fig10 /></p>
+<hr />
+<p>The energy novelty curve for Track 1 reveals a calm and relatively
+stable energy profile. The track moves through time with only two
+notable peaks—one around 50 seconds and another near 165—which likely
+correspond to sudden shifts in texture or modulation. Outside of these
+brief moments, the energy remains low and consistent, mirroring the
+ambient and generative structure of the piece. Built with macro
+oscillator drones and randomly triggered field recordings, the track
+avoids dramatic contrasts or climactic builds, instead relying on
+steady, immersive motion. This visualization reinforces the idea that
+energy in this piece is shaped more by subtle transformation than by
+dynamic impact.</p>
+</div>
+<div id="energy-novelty-track-2" class="section level3 tabset">
+<h3 class="tabset">Energy Novelty TRACK 2</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" width="576" data-figure-id=fig11 /></p>
+<hr />
+<p>Track 2, on the other hand, exhibits a much more animated and
+sectionally defined energy profile. The early stages of the track are
+filled with frequent spikes, especially in the first minute, where
+jungle breaks and guitar textures rapidly enter and exit the mix. The
+energy here is driven by rhythm, contrast, and arrangement decisions
+that create tension and release. As the track progresses, the intensity
+gradually subsides, moving toward a more stable outro. This trajectory
+reflects the influence of loop-based production and genre stylings such
+as vaporwave and jungle, which often play with sharp transitions early
+on before resolving into extended grooves or fadeouts. The energy curve
+suggests a structure built around contrast rather than constancy,
+highlighting the more deliberate compositional approach of this
+track.</p>
+</div>
+<div id="spectral-novelty-track-1" class="section level3 tabset">
+<h3 class="tabset">Spectral Novelty TRACK 1</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" width="576" data-figure-id=fig12 /></p>
+<hr />
+<p>Looking at the spectral novelty plot for Track 1 offers a deeper
+layer to this analysis. The timbral evolution of the piece unfolds
+gradually, with relatively little activity early on but increasing
+complexity after the 100-second mark. By around 200 seconds, the spikes
+in spectral content become more prominent, most likely marking the
+entrance of a rhythmic layer or harmonic shift that adds new dimensions
+to the sound. While the energy novelty plot shows only two major shifts,
+the spectral data reveals continuous harmonic and timbral evolution
+throughout the track. This suggests that Track 1 does not express itself
+through volume or impact, but through constant and layered sonic
+transformation. Its richness comes not from loudness but from density,
+texture, and subtle modulation—an approach that is characteristic of
+ambient, generative music.</p>
+</div>
+<div id="spectral-novelty-track-2" class="section level3 tabset">
+<h3 class="tabset">Spectral Novelty TRACK 2</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" width="576" data-figure-id=fig13 /></p>
+<hr />
+<p>Track 2’s spectral novelty plot paints a different picture. The first
+half of the track is marked by high-frequency variation, with frequent
+and sharp spikes reflecting an active and layered arrangement. Between
+60 and 130 seconds, the activity becomes especially dense, highlighting
+the fast-paced changes in timbre as jungle rhythms, pads, and orchestral
+elements move in and out of the mix. Toward the end, the plot shows a
+gradual tapering of novelty, suggesting a shift toward resolution or
+minimalism in the outro. When compared to the energy novelty, the
+correlation becomes clear—this track’s loudness and spectral shifts rise
+and fall together, reinforcing the sense that texture and dynamics are
+tightly linked. While Track 1 separates volume and timbral development,
+Track 2 weaves them together. The use of rhythmic breaks and
+genre-driven structure makes the piece feel more grounded, with clear
+peaks and transitions shaped by both energy and harmonic complexity.</p>
+</div>
+<div id="conclusion-2" class="section level3 tabset">
+<h3 class="tabset">CONCLUSION</h3>
+<p>What stands out here is the contrast in how each track creates
+motion. Track 1 flows steadily, with few spikes in energy and subtle
+timbral changes doing most of the expressive work. Track 2 takes a more
+dynamic path, building tension through sharp contrasts in both energy
+and frequency content. It reinforces that rhythm and energy are not
+always tied to volume, but often emerge from textural shifts and
+compositional pacing. Having explored how these tracks move and breathe,
+the next step is to dive deeper into what they’re made of sonically, so
+we move on to their timbral features.</p>
+</div>
+</div>
+<div id="timbral-features" class="section level1 storyboard">
+<h1 class="storyboard">6. TIMBRAL FEATURES</h1>
+<div id="ceptogram-track-1" class="section level3 tabset">
+<h3 class="tabset">CEPTOGRAM TRACK 1</h3>
+<!-- ```{r} -->
+<!-- "features/angelo-w-1.json" |>                           # Change the track -->
+<!--   compmus_mfccs(norm = "identity") |>                  # Change the norm -->
+<!--   ggplot(aes(x = time, y = mfcc, fill = value)) + -->
+<!--   geom_raster() + -->
+<!--   scale_y_continuous( -->
+<!--     breaks = 0:12, -->
+<!--     minor_breaks = NULL, -->
+<!--   ) + -->
+<!--   scale_fill_viridis_c(guide = "none") +               # Change the colours? -->
+<!--   labs(x = "Time (s)", y = "Coefficient Number", fill = NULL) + -->
+<!--   theme_classic()                                      # Change the theme? -->
+<!-- ``` -->
+<p><img src="TIMBRALFEATURES/ceptogram1.png" /></p>
+<hr />
+<p>The ceptogram for Track 1 shows a consistent energy distribution over
+time, especially across the lower MFCC coefficients, which typically
+correspond to broad timbral characteristics like warmth and brightness.
+Coefficients 0, 1, and 2 appear strong and steady, reflecting the
+constant drone textures and subtle field recording layers that drive the
+piece. As expected for a generative ambient composition, there is little
+contrast or dramatic change throughout, which results in a smooth,
+immersive listening experience. Higher coefficients are more diffuse,
+suggesting a lack of sharp or piercing textures. This visualization
+reinforces how the track relies on gradual evolution and tone shaping
+rather than abrupt shifts, which aligns with the modular and improvised
+nature of its creation.</p>
+</div>
+<div id="ceptogram-track-2" class="section level3 tabset">
+<h3 class="tabset">CEPTOGRAM TRACK 2</h3>
+<!-- # ```{r} -->
+<!-- # "features/angelo-w-2.json" |>                           # Change the track -->
+<!-- #   compmus_mfccs(norm = "identity") |>                  # Change the norm -->
+<!-- #   ggplot(aes(x = time, y = mfcc, fill = value)) + -->
+<!-- #   geom_raster() + -->
+<!-- #   scale_y_continuous( -->
+<!-- #     breaks = 0:12, -->
+<!-- #     minor_breaks = NULL, -->
+<!-- #   ) + -->
+<!-- #   scale_fill_viridis_c(guide = "none") +               # Change the colours? -->
+<!-- #   labs(x = "Time (s)", y = "Coefficient Number", fill = NULL) + -->
+<!-- #   theme_classic()                                      # Change the theme? -->
+<!-- # ``` -->
+<p><img src="TIMBRALFEATURES/ceptogram2.png" /></p>
+<hr />
+<p>Track 2 presents a more varied timbral profile in its ceptogram,
+though it still retains a sense of overall balance. The lower
+coefficients again dominate, especially between 0 and 3, highlighting
+the presence of foundational textures and sonic density. A noticeable
+increase in intensity during the first half of the track gives way to a
+soft decline toward the end, particularly in coefficient 0, perhaps
+signaling a breakdown or fade-out in the outro. This pattern aligns with
+the track’s layered construction, where jungle breaks, guitar, and pads
+interact in a way that supports both dynamic and atmospheric moments.
+While richer in contrast than Track 1, the overall timbral palette
+remains smooth and cohesive.</p>
+</div>
+<div id="timbre-ssm-track-1" class="section level3 tabset">
+<h3 class="tabset">TIMBRE SSM TRACK 1</h3>
+<!-- ```{r} -->
+<!-- "features/angelo-w-1.json" |>                           # Change the track -->
+<!--   compmus_mfccs(norm = "identity") |>                  # Change the norm -->
+<!--   compmus_self_similarity( -->
+<!--     feature = mfcc, -->
+<!--     distance = "euclidean"                             # Change the distance -->
+<!--   ) |> -->
+<!--   ggplot(aes(x = xtime, y = ytime, fill = d)) + -->
+<!--   geom_raster() + -->
+<!--   scale_fill_viridis_c(guide = "none") +               # Change the colours? -->
+<!--   labs(x = "Time (s)", y = NULL, fill = NULL) + -->
+<!--   theme_classic()                                      # Change the theme? -->
+<!-- ``` -->
+<p><img src="TIMBRALFEATURES/timbressm1.png" /></p>
+<hr />
+<p>Looking at the timbre self-similarity matrix (SSM) for Track 1, we
+see a structure shaped more by evolving textures than by formal
+repetition. The first 60 seconds show a more diverse pattern of timbral
+shifts, likely capturing the early moments when different sound sources
+begin to enter and interact. As the track progresses, more regular and
+dense blocks start to form, especially toward the end, suggesting a
+stabilization of textures that coincides with the entrance of a
+repetitive kick drum. While the harmonic content may be ambiguous, the
+SSM makes it clear that the track’s form is anchored by gradual
+modulation in timbre, not by traditional musical sections.</p>
+</div>
+<div id="timbre-ssm-track-2" class="section level3 tabset">
+<h3 class="tabset">TIMBRE SSM TRACK 2</h3>
+<!-- ```{r} -->
+<!-- "features/angelo-w-2.json" |>                           # Change the track -->
+<!--   compmus_mfccs(norm = "identity") |>                  # Change the norm -->
+<!--   compmus_self_similarity( -->
+<!--     feature = mfcc, -->
+<!--     distance = "euclidean"                             # Change the distance -->
+<!--   ) |> -->
+<!--   ggplot(aes(x = xtime, y = ytime, fill = d)) + -->
+<!--   geom_raster() + -->
+<!--   scale_fill_viridis_c(guide = "none") +               # Change the colours? -->
+<!--   labs(x = "Time (s)", y = NULL, fill = NULL) + -->
+<!--   theme_classic()                                      # Change the theme? -->
+<!-- ``` -->
+<p><img src="TIMBRALFEATURES/timbressm2.png" /></p>
+<hr />
+<p>The SSM for Track 2 shows a much more pronounced sense of structure.
+Repeating rectangular patterns and diagonal lines are present
+throughout, indicating recurring timbral ideas or looped layers that are
+intentionally revisited. This visual structure reflects the track’s more
+deliberate arrangement choices, where genre-blending elements like
+jungle breaks and pads are introduced and then repeated to reinforce a
+grounded groove. A stark contrast around the midpoint suggests a moment
+of structural change or a shift in instrumentation, while the outro
+appears to settle into a consistent timbral zone. Compared to Track 1’s
+abstract progression, this SSM reveals how Track 2 achieves form through
+loops and repetition.</p>
+</div>
+<div id="conclusion-3" class="section level3 tabset">
+<h3 class="tabset">CONCLUSION</h3>
+<p>Timbre plays a crucial role in shaping how these tracks are
+perceived. In Track 1, the smooth, evolving texture is consistent and
+immersive, aligning with the ambient aesthetic. Track 2, while more
+varied, still maintains a cohesive timbral identity through layering and
+section-based contrast. The self-similarity matrices reinforce how both
+tracks achieve form through texture, whether gradually shifting or
+intentionally looping. Now that we’ve looked at sound color and density,
+the last piece of the puzzle is time: how rhythm and tempo unfold across
+the structure. That’s where the temporal features step in.</p>
+</div>
+</div>
+<div id="temporal-features" class="section level1 storyboard">
+<h1 class="storyboard">7. TEMPORAL FEATURES</h1>
+<div id="noncyclical-tempogram-track-1" class="section level3 tabset">
+<h3 class="tabset">NONCYCLICAL TEMPOGRAM TRACK 1</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" width="576" data-figure-id=fig14 /></p>
+<hr />
+<p>The non-cyclical tempogram for Track 1 illustrates a loose and
+shifting sense of rhythmic energy that matches its ambient and
+generative identity. Across the first 150 seconds, tempo values
+fluctuate widely without locking into a stable groove, reflecting the
+unpredictable timing of field recordings and modular modulation.
+However, around the 160-second mark, clearer horizontal tempo bands
+emerge, especially in the 150–200 BPM range. This suggests a more
+grounded rhythmic element being introduced, likely the moment when the
+kick drum appears. This subtle but noticeable transition underscores the
+track’s narrative of drifting textures eventually giving way to
+structure.</p>
+</div>
+<div id="noncyclical-tempogram-track-2" class="section level3 tabset">
+<h3 class="tabset">NONCYCLICAL TEMPOGRAM TRACK 2</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" width="576" data-figure-id=fig15 /></p>
+<hr />
+<p>In contrast, the tempogram for Track 2 reveals a tightly organized
+rhythmic framework from the start. Multiple strong and stable tempo
+lines, particularly around 200–400 BPM, dominate the first half of the
+track and remain largely consistent throughout. These lines align with
+the repetitive patterns of jungle breaks and loop-based sections, which
+form the rhythmic core of the piece. Around the 160-second mark, the
+visual energy dips, possibly marking a breakdown or shift in
+arrangement, before returning to a steady pulse. This rhythmically
+driven progression supports the track’s deliberate blend of structure
+and atmosphere.</p>
+</div>
+<div id="cyclical-tempogram-track-1" class="section level3 tabset">
+<h3 class="tabset">CYCLICAL TEMPOGRAM TRACK 1</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" width="576" data-figure-id=fig16 /></p>
+<hr />
+<p>The cyclical tempogram for Track 1 hones in on beat periodicity,
+showing a similar arc to the non-cyclical view but within a tighter BPM
+window. Early sections show unstable and fragmented tempo lines, again
+confirming a lack of strict pulse. Yet by the final third of the track,
+consistent bands appear around 125 BPM, indicating that a groove has
+emerged after a long ambient buildup. This progression emphasizes the
+track’s dynamic between fluid, evolving textures and sudden rhythmic
+grounding, allowing the listener to experience a shift from abstract
+flow to tangible momentum.</p>
+</div>
+<div id="cyclical-tempogram-track-2" class="section level3 tabset">
+<h3 class="tabset">CYCLICAL TEMPOGRAM TRACK 2</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" width="576" data-figure-id=fig17 /></p>
+<hr />
+<p>Meanwhile, the cyclical tempogram for Track 2 affirms the steady
+rhythmic foundation that anchors the track. Tempo bands around 125 BPM
+remain clear and continuous, suggesting minimal deviation from the beat
+even as textures shift above it. This consistency allows the track to
+maintain its energy while introducing subtle changes in instrumentation
+and structure. Toward the end, the bands sharpen and slightly separate,
+hinting at a structural conclusion or textural resolution. Compared to
+Track 1’s rhythmic emergence, Track 2 maintains clarity from start to
+finish, showing how tempo can serve as a stabilizing force in complex,
+layered music.</p>
+</div>
+<div id="conclusion-4" class="section level3 tabset">
+<h3 class="tabset">CONCLUSION</h3>
+<p>The temporal analysis brings everything into perspective. Track 1
+begins without a defined rhythmic grid but slowly edges into one — like
+a pulse emerging from a fog. In contrast, Track 2 embraces rhythmic
+consistency from the start, leaning into its genre influences with
+looped drum breaks and structured repetition. These contrasting arcs
+help define the tracks’ identities — one built on emergence, the other
+on arrangement. Seeing tempo, texture, harmony, and energy together
+reveals how each dimension supports the whole, offering a more complete
+view of what makes these compositions tick.</p>
+</div>
+</div>
+<div id="conclusion-contribution" class="section level1 storyboard">
+<h1 class="storyboard">8. CONCLUSION (CONTRIBUTION)</h1>
+<p>Working through these analyses gave me a clearer language for
+describing how my tracks function sonically, beyond just vibe or intent.
+By comparing both pieces across harmonic, timbral, temporal, and energy
+dimensions, I began to see how specific creative decisions, like using a
+generative modular patch or chopping jungle breaks, show up in
+measurable ways. What felt intuitive during production became visible in
+the data, and that is powerful. These tools do not just dissect music,
+they reveal how form, process, and perception are all connected.</p>
+<p>Funny enough, before I even signed up for any musicology courses, I
+was already unknowingly engaging with this kind of analysis. When I made
+the track CLIQUE from my EP CLOSURE, I used spectrograms and other audio
+visualizers as visual assets and artwork. I even overlaid analysis tools
+onto the music video I created for it. So this feels like a full-circle
+moment, learning how these methods work under the hood and being able to
+apply them with more intention and understanding.</p>
+<p>These conclusions could benefit producers, composers, and sound
+designers who want to understand how their work behaves structurally,
+especially those working outside traditional forms or genres. For
+educators, it shows that analysis does not have to strip away
+creativity, it can give artists a language to describe and refine their
+intuition. For those working with AI in music, it highlights how
+patterns in data often reflect deeper artistic habits or workflows, a
+valuable reminder when building or critiquing generative systems.</p>
+<p>Ultimately, this process has helped me reflect on how I work, and how
+structure and freedom can coexist in sound.</p>
+</div>
+
+</div>
+
+<script>
+$(document).ready(function() {
+  // add bootstrap table styles to pandoc tables
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed table-sm');
+
+  // initialize mathjax
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+  document.getElementsByTagName("head")[0].appendChild(script);
+
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+  FlexDashboard.init({
+    fillPage: true,
+    orientation: "columns",
+    storyboard: true,
+    defaultFigWidth: 576,
+    defaultFigHeight: 460,
+    defaultFigWidthMobile: 360,
+    defaultFigHeightMobile: 460,
+    resize_reload: true
+  });
+  var navbar = $(".navbar").first();
+  var body = $("body").first();
+  var sidebar = $(".section.sidebar").first();
+  function addNavbarPadding() {
+    var navHeight = navbar.outerHeight();
+    body.css("padding-top", (navHeight + 8) + "px");
+    sidebar.css("top", navHeight + "px");
+    var resizeEvent = window.document.createEvent("UIEvents");
+    resizeEvent.initUIEvent("resize", true, false, window, 0);
+    window.dispatchEvent(resizeEvent);
+  }
+  if (!window.Shiny) setTimeout(addNavbarPadding, 100);
+  $(document).on("shiny:idle", function() {
+    setTimeout(addNavbarPadding, 50);
+  });
+});
+</script>
+
+</body>
+</html>

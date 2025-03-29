@@ -1,0 +1,702 @@
+---
+title: "Dashboard"
+author: "Angelo Werleman"
+output: 
+  flexdashboard::flex_dashboard:
+    self_contained: false
+    storyboard: true
+---
+
+```{r setup, include=FALSE}
+library(signal)
+library(tidyverse)
+library(flexdashboard)
+library(plotly)
+library(ggcorrplot)
+library(cowplot)
+library(ggplot2)
+library(tidymodels)
+library(ggdendro)
+library(DT)
+
+source("compmus.R")
+
+compmus2025 <- read_csv("compmus2025.csv")
+
+source("compmus.R")
+
+get_conf_mat <- function(fit) {
+  outcome <- .get_tune_outcome_names(fit)
+  fit |> 
+    collect_predictions() |> 
+    conf_mat(truth = outcome, estimate = .pred_class)
+}  
+
+get_pr <- function(fit) {
+  fit |> 
+    conf_mat_resampled() |> 
+    group_by(Prediction) |> mutate(precision = Freq / sum(Freq)) |> 
+    group_by(Truth) |> mutate(recall = Freq / sum(Freq)) |> 
+    ungroup() |> filter(Prediction == Truth) |> 
+    select(class = Prediction, precision, recall)
+}  
+
+#      C     C#    D     Eb    E     F     F#    G     Ab    A     Bb    B
+major_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    0,    0)
+minor_chord <-
+  c(   1,    0,    0,    1,    0,    0,    0,    1,    0,    0,    0,    0)
+seventh_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    1,    0)
+
+major_key <-
+  c(5.0, 2.0, 3.5, 2.0, 4.5, 4.0, 2.0, 4.5, 2.0, 3.5, 1.5, 4.0)
+minor_key <-
+  c(5.0, 2.0, 3.5, 4.5, 2.0, 4.0, 2.0, 4.5, 3.5, 2.0, 1.5, 4.0)
+
+chord_templates <-
+  tribble(
+    ~name, ~template,
+    "Gb:7", circshift(seventh_chord, 6),
+    "Gb:maj", circshift(major_chord, 6),
+    "Bb:min", circshift(minor_chord, 10),
+    "Db:maj", circshift(major_chord, 1),
+    "F:min", circshift(minor_chord, 5),
+    "Ab:7", circshift(seventh_chord, 8),
+    "Ab:maj", circshift(major_chord, 8),
+    "C:min", circshift(minor_chord, 0),
+    "Eb:7", circshift(seventh_chord, 3),
+    "Eb:maj", circshift(major_chord, 3),
+    "G:min", circshift(minor_chord, 7),
+    "Bb:7", circshift(seventh_chord, 10),
+    "Bb:maj", circshift(major_chord, 10),
+    "D:min", circshift(minor_chord, 2),
+    "F:7", circshift(seventh_chord, 5),
+    "F:maj", circshift(major_chord, 5),
+    "A:min", circshift(minor_chord, 9),
+    "C:7", circshift(seventh_chord, 0),
+    "C:maj", circshift(major_chord, 0),
+    "E:min", circshift(minor_chord, 4),
+    "G:7", circshift(seventh_chord, 7),
+    "G:maj", circshift(major_chord, 7),
+    "B:min", circshift(minor_chord, 11),
+    "D:7", circshift(seventh_chord, 2),
+    "D:maj", circshift(major_chord, 2),
+    "F#:min", circshift(minor_chord, 6),
+    "A:7", circshift(seventh_chord, 9),
+    "A:maj", circshift(major_chord, 9),
+    "C#:min", circshift(minor_chord, 1),
+    "E:7", circshift(seventh_chord, 4),
+    "E:maj", circshift(major_chord, 4),
+    "G#:min", circshift(minor_chord, 8),
+    "B:7", circshift(seventh_chord, 11),
+    "B:maj", circshift(major_chord, 11),
+    "D#:min", circshift(minor_chord, 3)
+  )
+
+key_templates <-
+  tribble(
+    ~name, ~template,
+    "Gb:maj", circshift(major_key, 6),
+    "Bb:min", circshift(minor_key, 10),
+    "Db:maj", circshift(major_key, 1),
+    "F:min", circshift(minor_key, 5),
+    "Ab:maj", circshift(major_key, 8),
+    "C:min", circshift(minor_key, 0),
+    "Eb:maj", circshift(major_key, 3),
+    "G:min", circshift(minor_key, 7),
+    "Bb:maj", circshift(major_key, 10),
+    "D:min", circshift(minor_key, 2),
+    "F:maj", circshift(major_key, 5),
+    "A:min", circshift(minor_key, 9),
+    "C:maj", circshift(major_key, 0),
+    "E:min", circshift(minor_key, 4),
+    "G:maj", circshift(major_key, 7),
+    "B:min", circshift(minor_key, 11),
+    "D:maj", circshift(major_key, 2),
+    "F#:min", circshift(minor_key, 6),
+    "A:maj", circshift(major_key, 9),
+    "C#:min", circshift(minor_key, 1),
+    "E:maj", circshift(major_key, 4),
+    "G#:min", circshift(minor_key, 8),
+    "B:maj", circshift(major_key, 11),
+    "D#:min", circshift(minor_key, 3)
+  )
+```
+
+# 1. INTRODUCTION {.tabset}
+
+This dashboard presents an in-depth analysis of two original tracks I created as part of my musicology coursework. The first, angelo-w-1, is a generative ambient composition built using modular synthesis and field recordings, while the second, angelo-w-2, blends jungle rhythms, vaporwave textures, and live guitar into a more structured yet atmospheric piece.
+
+Rather than simply describing these tracks in terms of genre or mood, I wanted to explore how they behave across multiple musical dimensions. Using computational tools, I examined features such as chroma, timbre, tempo, energy, and harmonic structure, comparing the two tracks to each other and to a larger corpus of student and AI-generated music.
+
+The goal of this project is not just to map out technical traits, but to reflect on how creative choices manifest in sound and how structure can emerge even in music built on spontaneity or abstraction. By translating intuition into measurable patterns, this analysis opens up new ways of thinking about form, process, and musical identity.
+
+# 2. MY TRACKS {.tabset}
+
+###
+
+angelo-w-1.wav
+
+I created this track using a generative drone patch in VCV Rack alongside Seqsual’s RSVP sampler on my iPad. The sound sources include recordings from my childhood living room in Aruba, such as my dad’s keys, table scratches, and tapping sounds. RSVP’s random sample player generated evolving textures with these recordings while I shaped the sound by manipulating an LFO and adjusting the frequency, timbre, morph, and harmonics on VCV’s macro oscillator. This excerpt is taken from an 11-minute live jam.
+
+###
+
+angelo-w-2.wav
+
+This demo was made in FL Studio using my electric guitar, jungle samples, ambient pads, and an orchestral lead. I aimed to blend elements of jungle, rock, and vaporwave, drawing inspiration from George Clanton’s music. I layered heavy reverb across the track to create a hazy, atmospheric sound.
+
+# 3. TRACK FEATURES VS CORPUS VS CLUSTERING {.storyboard}
+
+### TRACK FEATURES ANALYSIS {.tabset}
+
+In this section, I’m looking at a plot to see how my two tracks relate to the rest of the corpus using tempo, danceability, arousal, and instrumentalness. These features give a good idea of the vibe, rhythm, and structure of each track. My tracks are highlighted in red so it’s easier to spot them in the full dataset. After this, I’ll use clustering to see how this visual space translates into actual groupings — and whether the tracks that are close together in the plot also end up in similar clusters or share sonic or structural traits.
+
+### CLASS CORPUS {.tabset}
+
+```{r}
+compmus2025 <- read_csv("compmus2025.csv")
+
+# Tag your tracks
+compmus2025 <- compmus2025 |>
+  mutate(track_type = if_else(filename %in% c("angelo-w-1", "angelo-w-2"), "My Track", "Corpus"))
+
+p_class <- compmus2025 |>
+  ggplot(
+    aes(
+      x = tempo,
+      y = danceability,
+      size = arousal,
+      colour = track_type,
+      label = filename
+    )
+  ) +
+  geom_point(alpha = 0.8) +
+  scale_colour_manual(
+    values = c("My Track" = "red", "Corpus" = "gray"),
+    name = "Track Type"
+  ) +
+  scale_size_continuous(
+    trans = "exp",
+    guide = "none"
+  ) +
+  scale_x_continuous(
+    limits = c(50, 180),
+    breaks = c(50, 100, 150, 200),
+    minor_breaks = NULL
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1),
+    breaks = c(0, 0.5, 1),
+    minor_breaks = NULL
+  ) +
+  theme_minimal() +
+  labs(
+    x = "Tempo",
+    y = "Danceability"
+  )
+```
+
+---------------------------------------------
+
+In this section, I visualize how my two tracks relate to the broader class corpus by plotting tempo against danceability, with arousal represented by point size. The tracks are marked in red to highlight their position in the dataset. Both tracks sit within the higher tempo range, between roughly 135 and 160 BPM. This is interesting when contrasted with their ambient and genre-blending characteristics, suggesting that a faster tempo does not always equate to high energy in the traditional sense. Their danceability values hover around 0.6 to 0.7, which implies that, despite their experimental nature, the tracks maintain a degree of rhythmic cohesion or pulse-like structure. The smaller point size, which reflects lower arousal, further aligns with the tracks’ atmospheric and subdued qualities. Importantly, neither track appears as an extreme outlier. Instead, they fall within a dense region of the corpus, suggesting a surprising overlap in measurable audio features, even if the artistic intent or sonic result is quite distinct. This observation raises the question of whether these perceived similarities carry over into the clustering analysis that follows.
+
+### HIERARCHICAL CLUSTERING {.tabset}
+
+```{r}
+library(ggdendro)
+
+# Add your track label again (if not already in compmus2025)
+compmus2025_filtered <- compmus2025 |>
+  filter(!is.na(ai)) |>
+  mutate(track_type = if_else(filename %in% c("angelo-w-1", "angelo-w-2"), "My Track", "Corpus"))
+
+# Prepare data
+cluster_juice <- recipe(
+    filename ~ arousal + danceability + instrumentalness + tempo,
+    data = compmus2025_filtered
+  ) |>
+  step_center(all_predictors()) |>
+  step_scale(all_predictors()) |>
+  prep(compmus2025_filtered) |>
+  juice() |>
+  column_to_rownames("filename")
+
+# Compute clustering
+compmus_dist <- dist(cluster_juice, method = "euclidean")
+hc <- hclust(compmus_dist, method = "average")
+dendro <- dendro_data(hc)
+
+# Match color based on your tracks
+label_data <- dendro$labels |>
+  mutate(track_type = if_else(label %in% c("angelo-w-1", "angelo-w-2"), "My Track", "Corpus")) |>
+  mutate(color = if_else(track_type == "My Track", "red", "gray"))
+
+# Plot
+ggplot() +
+  geom_segment(data = dendro$segments,
+               aes(x = x, y = y, xend = xend, yend = yend),
+               color = "black") +
+  geom_text(data = label_data,
+            aes(x = x, y = -0.05, label = label, color = color),
+            angle = 90, hjust = 1, vjust = 0.5, size = 3) +
+  scale_color_identity() +  # Use the color column directly
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()) +
+  labs(title = "Hierarchical Clustering of Tracks",
+       x = NULL, y = NULL)
+ggplotly()
+
+```
+
+-------------------
+
+The dendrogram generated from hierarchical clustering gives a deeper look into how my tracks relate to others in the corpus based on tempo, arousal, danceability, and instrumentalness. My tracks are highlighted in red for clarity. One of the most noticeable patterns is how tracks by the same artist often cluster closely together, implying that personal production habits and stylistic choices—such as consistent tempo ranges, rhythmic structures, or instrumental textures, strongly influence the numerical features used in the analysis. In the case of AI-generated tracks, this clustering might reflect the reuse of the same prompts or model parameters, which could result in tracks with nearly identical structural and timbral qualities. What this dendrogram reveals is that production method, whether human or machine, has a measurable impact on how tracks relate to each other in terms of computational features. My own tracks, though created with different tools and creative processes, appear near tracks with somewhat similar rhythmic and instrumental profiles, indicating that the features chosen for this analysis do capture meaningful musical relationships.
+
+### CONCLUSION {.tabset}
+
+Looking at how my tracks compare to the broader corpus shows how data alone can’t fully capture creative intent — but it can reveal unexpected overlaps. Even though my two tracks are rooted in generative textures and vaporwave, inspired sampling, they sit comfortably within common tempo and danceability spaces. The clustering reinforces that similarities in production methods, whether AI or human-made, often leave measurable footprints in audio features. This section maps out the broader landscape, but to really understand what gives each track its personality, we need to zoom into their internal structure. So next, I dig into their harmonic and tonal identity through chroma-based analysis.
+
+# 4. CHROMA FEATURES {.storyboard}
+
+### CHORDOGRAM TRACK 1 {.tabset}
+
+```{r}
+chordogram_plot <- "features/angelo-w-1.json" |>
+  compmus_chroma(norm = "identity") |>
+  compmus_match_pitch_templates(
+    chord_templates,         # Change to chord_templates if desired
+    norm = "identity",       # Try different norms (and match it with what you used in `compmus_chroma`)
+    distance = "cosine"   # Try different distance metrics
+  ) |>
+  ggplot(aes(x = time, y = name, fill = d)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +               # Change the colours?
+  labs(x = "Time (s)", y = "Template", fill = NULL) +
+  theme_classic()
+
+  chordogram_plot
+```
+
+------
+
+The chordogram for Track 1 shows a gradually unfolding harmonic structure that doesn’t follow a strict progression. This makes sense given the track's generative nature. The plot is dense with yellow and green bands, which point to a rich harmonic texture, while darker blue areas highlight brief transitions or shifts. Chords like B♭ major, G major, and C major surface often, suggesting potential tonal centers even in the absence of a formal structure. Early sections feel more harmonically saturated, while later parts become slightly more organized, likely due to the entrance of rhythmic elements such as the kick drum. This change marks a shift toward greater consistency, reflecting the evolving sound design choices. The way harmonic content morphs over time can be traced back to the macro oscillator modulations and RSVP's random playback, which keep the piece fluid and unpredictable.
+
+### CHORDOGRAM TRACK 2
+
+```{r}
+chordogram_plot <- "features/angelo-w-2.json" |>
+  compmus_chroma(norm = "identity") |>
+  compmus_match_pitch_templates(
+    chord_templates,         # Change to chord_templates if desired
+    norm = "identity",       # Try different norms (and match it with what you used in `compmus_chroma`)
+    distance = "cosine"   # Try different distance metrics
+  ) |>
+  ggplot(aes(x = time, y = name, fill = d)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +               # Change the colours?
+  labs(x = "Time (s)", y = "Template", fill = NULL) +
+  theme_classic()
+
+  chordogram_plot
+```
+
+------
+
+In contrast, Track 2’s chordogram feels more structured and harmonically dense. The instrumentation—electric guitar, jungle rhythms, ambient pads, and orchestral leads—results in a layered texture that keeps the harmonic space constantly in motion. Between 50 and 130 seconds, the plot shows a high concentration of harmonic matches, suggesting that this part of the track leans into chord progressions more actively. Chords like C major, G major, and A minor occur repeatedly, hinting at established tonal centers and recurring motifs. Toward the end, broader yellow bands signal a move toward harmonic closure, where the progression settles into repeating patterns. This sense of resolution ties into the track’s vaporwave influence, where looping structures help stabilize an otherwise lush and spacious sound..
+
+### KEYGRAM TRACK 1 {.tabset}
+
+```{r}
+keygram_plot <- "features/angelo-w-1.json" |>
+  compmus_chroma(norm = "identity") |>
+  compmus_match_pitch_templates(
+    key_templates,         # Change to chord_templates if desired
+    norm = "identity",       # Try different norms (and match it with what you used in `compmus_chroma`)
+    distance = "cosine"   # Try different distance metrics
+  ) |>
+  ggplot(aes(x = time, y = name, fill = d)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +               # Change the colours?
+  labs(x = "Time (s)", y = "Template", fill = NULL) +
+  theme_classic()
+
+  keygram_plot
+```
+
+-----
+
+Looking at the keygram for Track 1, the track again presents a drifting and ambiguous tonal landscape. The first minute is scattered with activity across various key templates, particularly in the upper major registers like B, D, and G. This kind of spread supports the idea that the harmonic content wasn’t deliberately constructed but emerged from real-time interactions between random sample playback and evolving oscillator parameters. There are also moments where the key clarity drops, likely reflecting noisier textures or percussive layers. In the last section, we see brief returns to keys like C major and F major, hinting at a faint harmonic resolution as the track winds down.
+
+### KEYGRAM TRACK 2 {.tabset}
+
+```{r}
+keygram_plot <- "features/angelo-w-2.json" |>
+  compmus_chroma(norm = "identity") |>
+  compmus_match_pitch_templates(
+    key_templates,         # Change to chord_templates if desired
+    norm = "identity",       # Try different norms (and match it with what you used in `compmus_chroma`)
+    distance = "cosine"   # Try different distance metrics
+  ) |>
+  ggplot(aes(x = time, y = name, fill = d)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +               # Change the colours?
+  labs(x = "Time (s)", y = "Template", fill = NULL) +
+  theme_classic()
+
+  keygram_plot
+```
+
+-------
+
+Track 2’s keygram tells a different story. Throughout the piece, tonal stability is more evident, with keys like C minor, G minor, and F minor recurring often. These stable areas reflect a more intentional harmonic design, where loops and motifs revisit specific key centers. The dense layers of instrumentation don’t obscure this structure, but rather reinforce it. As the piece moves toward its end, keys like B♭ minor and E♭ major begin to appear more prominently, possibly signifying a harmonic shift or conclusion. This tonal consistency aligns with the structure implied by the genre influences, maintaining a firm sense of musical form beneath the surface.
+
+### CHROMAGRAM TRACK 1 {.tabset}
+
+```{r}
+chromagram_plot <- "features/angelo-w-1.json" |>                           # Change the track
+  compmus_chroma(norm = "identity") |>                 # Change the norm
+  ggplot(aes(x = time, y = pc, fill = value)) +
+  geom_raster() +
+  scale_y_continuous(
+    breaks = 0:11,
+    minor_breaks = NULL,
+    labels = c(
+                "C", "C#|Db", "D", "D#|Eb",
+                "E", "F", "F#|Gb", "G",
+                "G#|Ab", "A", "A#|Bb", "B"
+              )
+  ) +
+  scale_fill_viridis_c(guide = "none") +               # Change the colours?
+  labs(x = "Time (s)", y = NULL, fill = NULL) +
+  theme_classic()                                      # Change the theme?
+
+  chromagram_plot
+
+```
+
+-------
+
+The chromagram for Track 1 reflects the ambient, meandering feel of the piece. Instead of vertical lines or consistent repetition, the pitch class activity spreads loosely across time. In the beginning, there’s a clear emphasis on F, likely serving as a harmonic anchor, but as the track progresses, notes like E, G, and F♯ start showing up with more regularity. Still, none dominate enough to define a key or establish repetition. This kind of chromatic diffusion aligns with the generative methods used in the track’s creation and complements the chordogram, which translates this pitch data into more musical terms. Together, they show that the track is less about conventional harmony and more about evolving tonal color.
+
+### CHROMAGRAM TRACK 2 {.tabset}
+
+```{r}
+chromagram_plot <- "features/angelo-w-2.json" |>                           # Change the track
+  compmus_chroma(norm = "identity") |>                 # Change the norm
+  ggplot(aes(x = time, y = pc, fill = value)) +
+  geom_raster() +
+  scale_y_continuous(
+    breaks = 0:11,
+    minor_breaks = NULL,
+    labels = c(
+                "C", "C#|Db", "D", "D#|Eb",
+                "E", "F", "F#|Gb", "G",
+                "G#|Ab", "A", "A#|Bb", "B"
+              )
+  ) +
+  scale_fill_viridis_c(guide = "none") +               # Change the colours?
+  labs(x = "Time (s)", y = NULL, fill = NULL) +
+  theme_classic()                                      # Change the theme?
+
+  chromagram_plot
+
+```
+
+----------
+
+For Track 2, the chromagram suggests a more dynamic and focused harmonic layout. The middle of the track lights up with activity across G, F, and E, indicating a harmonic movement that feels more deliberate. Compared to the fluid chroma distribution in Track 1, this one shows more consistency, though still avoiding rigid loops. By the end, notes like C and D grow stronger, hinting at a build-up or concluding shift. These evolving chromatic patterns match the genre blend of the track, where harmonic progressions support an overall dreamy and layered atmosphere.
+
+
+### CHROMA SSM TRACK 1 {.tabset}
+
+```{r}
+"features/angelo-w-1.json" |>                           # Change the track
+  compmus_chroma(norm = "identity") |>                 # Change the norm
+  compmus_self_similarity(
+    feature = pc,
+    distance = "euclidean"                             # Change the distance
+  ) |>
+  ggplot(aes(x = xtime, y = ytime, fill = d)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +               # Change the colours?
+  labs(x = "Time (s)", y = NULL, fill = NULL) +
+  theme_classic()                                      # Change the theme?
+```
+
+----------
+
+In the chroma self-similarity matrix for Track 1, you see a plot of gradual evolution rather than structural repetition. There aren’t many strong diagonal lines, which you’d expect in a more traditional verse-chorus format. Instead, the visual is broken into evolving color patches, each representing subtle harmonic shifts. This reinforces the track’s freeform, ambient identity. Some more consistent blocks begin to appear in the last section, possibly when rhythmic layers bring stability to the soundscape. These patterns emphasize the piece’s reliance on gradual transformation over structured form.
+
+### CHROMA SSM TRACK 2 {.tabset}
+
+```{r}
+"features/angelo-w-2.json" |>                           # Change the track
+  compmus_chroma(norm = "identity") |>                 # Change the norm
+  compmus_self_similarity(
+    feature = pc,
+    distance = "euclidean"                             # Change the distance
+  ) |>
+  ggplot(aes(x = xtime, y = ytime, fill = d)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +               # Change the colours?
+  labs(x = "Time (s)", y = NULL, fill = NULL) +
+  theme_classic()                                      # Change the theme?
+```
+
+-----------
+
+The self-similarity plot for Track 2, on the other hand, is filled with repeating shapes and diagonals that suggest harmonic loops and structural callbacks. Especially in the final third, you see clear repetitions, pointing to recurring motifs or phrases. These kinds of patterns usually appear in music with stronger rhythmic or harmonic identities, which matches how this track was built. There’s more focus on arrangement, with defined sections that are repeated or revisited throughout. The SSM clearly illustrates that this piece was structured with a stronger sense of musical planning compared to the more spontaneous flow of Track 1.
+
+### CONCLUSION {.tabset}
+
+Through chroma-based visualizations, it becomes clear that Track 1 leans heavily into evolving harmonic textures, drifting between tonal centers with no set progression, a reflection of its generative and ambient roots. Track 2, meanwhile, maintains stronger key references and recurring chord structures, aligning with its sample-based, loop-driven nature. These differences in harmonic form act as a kind of musical skeleton, but to fully understand how each track feels, we also need to explore how energy and impact shift over time. That’s where the next section on loudness and energy comes in.
+
+# 5. LOUDNESS & ENERGY {.storyboard}
+
+### Energy Novelty TRACK 1 {.tabset}
+
+```{r}
+"features/angelo-w-1.json" |>
+  compmus_energy_novelty() |>
+  ggplot(aes(t, novelty)) +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "Energy Novelty")
+
+```
+
+-------
+
+The energy novelty curve for Track 1 reveals a calm and relatively stable energy profile. The track moves through time with only two notable peaks—one around 50 seconds and another near 165—which likely correspond to sudden shifts in texture or modulation. Outside of these brief moments, the energy remains low and consistent, mirroring the ambient and generative structure of the piece. Built with macro oscillator drones and randomly triggered field recordings, the track avoids dramatic contrasts or climactic builds, instead relying on steady, immersive motion. This visualization reinforces the idea that energy in this piece is shaped more by subtle transformation than by dynamic impact.
+
+### Energy Novelty TRACK 2 {.tabset}
+
+```{r}
+"features/angelo-w-2.json" |>
+  compmus_energy_novelty() |>
+  ggplot(aes(t, novelty)) +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "Energy Novelty")
+
+```
+
+---------
+
+Track 2, on the other hand, exhibits a much more animated and sectionally defined energy profile. The early stages of the track are filled with frequent spikes, especially in the first minute, where jungle breaks and guitar textures rapidly enter and exit the mix. The energy here is driven by rhythm, contrast, and arrangement decisions that create tension and release. As the track progresses, the intensity gradually subsides, moving toward a more stable outro. This trajectory reflects the influence of loop-based production and genre stylings such as vaporwave and jungle, which often play with sharp transitions early on before resolving into extended grooves or fadeouts. The energy curve suggests a structure built around contrast rather than constancy, highlighting the more deliberate compositional approach of this track.
+
+### Spectral Novelty TRACK 1 {.tabset}
+
+```{r}
+"features/angelo-w-1.json" |>
+  compmus_spectral_novelty() |>
+  ggplot(aes(t, novelty)) +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "Spectral Novelty")
+
+```
+
+-------
+
+Looking at the spectral novelty plot for Track 1 offers a deeper layer to this analysis. The timbral evolution of the piece unfolds gradually, with relatively little activity early on but increasing complexity after the 100-second mark. By around 200 seconds, the spikes in spectral content become more prominent, most likely marking the entrance of a rhythmic layer or harmonic shift that adds new dimensions to the sound. While the energy novelty plot shows only two major shifts, the spectral data reveals continuous harmonic and timbral evolution throughout the track. This suggests that Track 1 does not express itself through volume or impact, but through constant and layered sonic transformation. Its richness comes not from loudness but from density, texture, and subtle modulation—an approach that is characteristic of ambient, generative music.
+
+### Spectral Novelty TRACK 2  {.tabset}
+
+```{r}
+"features/angelo-w-2.json" |>
+  compmus_spectral_novelty() |>
+  ggplot(aes(t, novelty)) +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "Spectral Novelty")
+
+```
+
+-----------
+
+Track 2’s spectral novelty plot paints a different picture. The first half of the track is marked by high-frequency variation, with frequent and sharp spikes reflecting an active and layered arrangement. Between 60 and 130 seconds, the activity becomes especially dense, highlighting the fast-paced changes in timbre as jungle rhythms, pads, and orchestral elements move in and out of the mix. Toward the end, the plot shows a gradual tapering of novelty, suggesting a shift toward resolution or minimalism in the outro. When compared to the energy novelty, the correlation becomes clear—this track’s loudness and spectral shifts rise and fall together, reinforcing the sense that texture and dynamics are tightly linked. While Track 1 separates volume and timbral development, Track 2 weaves them together. The use of rhythmic breaks and genre-driven structure makes the piece feel more grounded, with clear peaks and transitions shaped by both energy and harmonic complexity.
+
+### CONCLUSION {.tabset}
+
+What stands out here is the contrast in how each track creates motion. Track 1 flows steadily, with few spikes in energy and subtle timbral changes doing most of the expressive work. Track 2 takes a more dynamic path, building tension through sharp contrasts in both energy and frequency content. It reinforces that rhythm and energy are not always tied to volume, but often emerge from textural shifts and compositional pacing. Having explored how these tracks move and breathe, the next step is to dive deeper into what they’re made of sonically, so we move on to their timbral features.
+
+# 6. TIMBRAL FEATURES {.storyboard}
+
+### CEPTOGRAM TRACK 1 {.tabset}
+
+<!-- ```{r} -->
+<!-- "features/angelo-w-1.json" |>                           # Change the track -->
+<!--   compmus_mfccs(norm = "identity") |>                  # Change the norm -->
+<!--   ggplot(aes(x = time, y = mfcc, fill = value)) + -->
+<!--   geom_raster() + -->
+<!--   scale_y_continuous( -->
+<!--     breaks = 0:12, -->
+<!--     minor_breaks = NULL, -->
+<!--   ) + -->
+<!--   scale_fill_viridis_c(guide = "none") +               # Change the colours? -->
+<!--   labs(x = "Time (s)", y = "Coefficient Number", fill = NULL) + -->
+<!--   theme_classic()                                      # Change the theme? -->
+<!-- ``` -->
+
+![](TIMBRALFEATURES/ceptogram1.png)
+
+-----------
+
+The ceptogram for Track 1 shows a consistent energy distribution over time, especially across the lower MFCC coefficients, which typically correspond to broad timbral characteristics like warmth and brightness. Coefficients 0, 1, and 2 appear strong and steady, reflecting the constant drone textures and subtle field recording layers that drive the piece. As expected for a generative ambient composition, there is little contrast or dramatic change throughout, which results in a smooth, immersive listening experience. Higher coefficients are more diffuse, suggesting a lack of sharp or piercing textures. This visualization reinforces how the track relies on gradual evolution and tone shaping rather than abrupt shifts, which aligns with the modular and improvised nature of its creation.
+
+### CEPTOGRAM TRACK 2 {.tabset}
+
+<!-- # ```{r} -->
+<!-- # "features/angelo-w-2.json" |>                           # Change the track -->
+<!-- #   compmus_mfccs(norm = "identity") |>                  # Change the norm -->
+<!-- #   ggplot(aes(x = time, y = mfcc, fill = value)) + -->
+<!-- #   geom_raster() + -->
+<!-- #   scale_y_continuous( -->
+<!-- #     breaks = 0:12, -->
+<!-- #     minor_breaks = NULL, -->
+<!-- #   ) + -->
+<!-- #   scale_fill_viridis_c(guide = "none") +               # Change the colours? -->
+<!-- #   labs(x = "Time (s)", y = "Coefficient Number", fill = NULL) + -->
+<!-- #   theme_classic()                                      # Change the theme? -->
+<!-- # ``` -->
+
+![](TIMBRALFEATURES/ceptogram2.png)
+
+---------
+
+Track 2 presents a more varied timbral profile in its ceptogram, though it still retains a sense of overall balance. The lower coefficients again dominate, especially between 0 and 3, highlighting the presence of foundational textures and sonic density. A noticeable increase in intensity during the first half of the track gives way to a soft decline toward the end, particularly in coefficient 0, perhaps signaling a breakdown or fade-out in the outro. This pattern aligns with the track’s layered construction, where jungle breaks, guitar, and pads interact in a way that supports both dynamic and atmospheric moments. While richer in contrast than Track 1, the overall timbral palette remains smooth and cohesive.
+
+### TIMBRE SSM TRACK 1 {.tabset}
+
+<!-- ```{r} -->
+<!-- "features/angelo-w-1.json" |>                           # Change the track -->
+<!--   compmus_mfccs(norm = "identity") |>                  # Change the norm -->
+<!--   compmus_self_similarity( -->
+<!--     feature = mfcc, -->
+<!--     distance = "euclidean"                             # Change the distance -->
+<!--   ) |> -->
+<!--   ggplot(aes(x = xtime, y = ytime, fill = d)) + -->
+<!--   geom_raster() + -->
+<!--   scale_fill_viridis_c(guide = "none") +               # Change the colours? -->
+<!--   labs(x = "Time (s)", y = NULL, fill = NULL) + -->
+<!--   theme_classic()                                      # Change the theme? -->
+<!-- ``` -->
+
+![](TIMBRALFEATURES/timbressm1.png)
+
+
+-------------
+
+Looking at the timbre self-similarity matrix (SSM) for Track 1, we see a structure shaped more by evolving textures than by formal repetition. The first 60 seconds show a more diverse pattern of timbral shifts, likely capturing the early moments when different sound sources begin to enter and interact. As the track progresses, more regular and dense blocks start to form, especially toward the end, suggesting a stabilization of textures that coincides with the entrance of a repetitive kick drum. While the harmonic content may be ambiguous, the SSM makes it clear that the track’s form is anchored by gradual modulation in timbre, not by traditional musical sections.
+
+### TIMBRE SSM TRACK 2 {.tabset}
+
+<!-- ```{r} -->
+<!-- "features/angelo-w-2.json" |>                           # Change the track -->
+<!--   compmus_mfccs(norm = "identity") |>                  # Change the norm -->
+<!--   compmus_self_similarity( -->
+<!--     feature = mfcc, -->
+<!--     distance = "euclidean"                             # Change the distance -->
+<!--   ) |> -->
+<!--   ggplot(aes(x = xtime, y = ytime, fill = d)) + -->
+<!--   geom_raster() + -->
+<!--   scale_fill_viridis_c(guide = "none") +               # Change the colours? -->
+<!--   labs(x = "Time (s)", y = NULL, fill = NULL) + -->
+<!--   theme_classic()                                      # Change the theme? -->
+<!-- ``` -->
+
+![](TIMBRALFEATURES/timbressm2.png)
+
+------------
+
+The SSM for Track 2 shows a much more pronounced sense of structure. Repeating rectangular patterns and diagonal lines are present throughout, indicating recurring timbral ideas or looped layers that are intentionally revisited. This visual structure reflects the track’s more deliberate arrangement choices, where genre-blending elements like jungle breaks and pads are introduced and then repeated to reinforce a grounded groove. A stark contrast around the midpoint suggests a moment of structural change or a shift in instrumentation, while the outro appears to settle into a consistent timbral zone. Compared to Track 1’s abstract progression, this SSM reveals how Track 2 achieves form through loops and repetition.
+
+### CONCLUSION {.tabset}
+
+Timbre plays a crucial role in shaping how these tracks are perceived. In Track 1, the smooth, evolving texture is consistent and immersive, aligning with the ambient aesthetic. Track 2, while more varied, still maintains a cohesive timbral identity through layering and section-based contrast. The self-similarity matrices reinforce how both tracks achieve form through texture, whether gradually shifting or intentionally looping. Now that we’ve looked at sound color and density, the last piece of the puzzle is time: how rhythm and tempo unfold across the structure. That’s where the temporal features step in.
+
+# 7. TEMPORAL FEATURES {.storyboard}
+
+### NONCYCLICAL TEMPOGRAM TRACK 1 {.tabset}
+
+```{r}
+"features/angelo-w-1.json" |>
+  compmus_tempogram(window_size = 6, hop_size = 1, cyclic = FALSE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic()
+
+```
+
+-----------
+
+The non-cyclical tempogram for Track 1 illustrates a loose and shifting sense of rhythmic energy that matches its ambient and generative identity. Across the first 150 seconds, tempo values fluctuate widely without locking into a stable groove, reflecting the unpredictable timing of field recordings and modular modulation. However, around the 160-second mark, clearer horizontal tempo bands emerge, especially in the 150–200 BPM range. This suggests a more grounded rhythmic element being introduced, likely the moment when the kick drum appears. This subtle but noticeable transition underscores the track’s narrative of drifting textures eventually giving way to structure.
+
+### NONCYCLICAL TEMPOGRAM TRACK 2 {.tabset}
+
+```{r}
+"features/angelo-w-2.json" |>
+  compmus_tempogram(window_size = 6, hop_size = 1, cyclic = FALSE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic()
+
+```
+
+-------------
+
+In contrast, the tempogram for Track 2 reveals a tightly organized rhythmic framework from the start. Multiple strong and stable tempo lines, particularly around 200–400 BPM, dominate the first half of the track and remain largely consistent throughout. These lines align with the repetitive patterns of jungle breaks and loop-based sections, which form the rhythmic core of the piece. Around the 160-second mark, the visual energy dips, possibly marking a breakdown or shift in arrangement, before returning to a steady pulse. This rhythmically driven progression supports the track’s deliberate blend of structure and atmosphere.
+
+### CYCLICAL TEMPOGRAM TRACK 1 {.tabset}
+
+```{r}
+"features/angelo-w-1.json" |>
+  compmus_tempogram(window_size = 6, hop_size = 1, cyclic = TRUE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic()
+```
+
+----------
+
+The cyclical tempogram for Track 1 hones in on beat periodicity, showing a similar arc to the non-cyclical view but within a tighter BPM window. Early sections show unstable and fragmented tempo lines, again confirming a lack of strict pulse. Yet by the final third of the track, consistent bands appear around 125 BPM, indicating that a groove has emerged after a long ambient buildup. This progression emphasizes the track’s dynamic between fluid, evolving textures and sudden rhythmic grounding, allowing the listener to experience a shift from abstract flow to tangible momentum.
+
+### CYCLICAL TEMPOGRAM TRACK 2 {.tabset}
+
+```{r}
+"features/angelo-w-2.json" |>
+  compmus_tempogram(window_size = 6, hop_size = 1, cyclic = TRUE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic()
+```
+
+--------------
+
+Meanwhile, the cyclical tempogram for Track 2 affirms the steady rhythmic foundation that anchors the track. Tempo bands around 125 BPM remain clear and continuous, suggesting minimal deviation from the beat even as textures shift above it. This consistency allows the track to maintain its energy while introducing subtle changes in instrumentation and structure. Toward the end, the bands sharpen and slightly separate, hinting at a structural conclusion or textural resolution. Compared to Track 1’s rhythmic emergence, Track 2 maintains clarity from start to finish, showing how tempo can serve as a stabilizing force in complex, layered music.
+
+### CONCLUSION {.tabset}
+
+The temporal analysis brings everything into perspective. Track 1 begins without a defined rhythmic grid but slowly edges into one — like a pulse emerging from a fog. In contrast, Track 2 embraces rhythmic consistency from the start, leaning into its genre influences with looped drum breaks and structured repetition. These contrasting arcs help define the tracks’ identities — one built on emergence, the other on arrangement. Seeing tempo, texture, harmony, and energy together reveals how each dimension supports the whole, offering a more complete view of what makes these compositions tick.
+
+# 8. CONCLUSION (CONTRIBUTION) {.storyboard}
+
+Working through these analyses gave me a clearer language for describing how my tracks function sonically, beyond just vibe or intent. By comparing both pieces across harmonic, timbral, temporal, and energy dimensions, I began to see how specific creative decisions, like using a generative modular patch or chopping jungle breaks, show up in measurable ways. What felt intuitive during production became visible in the data, and that is powerful. These tools do not just dissect music, they reveal how form, process, and perception are all connected.
+
+Funny enough, before I even signed up for any musicology courses, I was already unknowingly engaging with this kind of analysis. When I made the track CLIQUE from my EP CLOSURE, I used spectrograms and other audio visualizers as visual assets and artwork. I even overlaid analysis tools onto the music video I created for it. So this feels like a full-circle moment, learning how these methods work under the hood and being able to apply them with more intention and understanding.
+
+These conclusions could benefit producers, composers, and sound designers who want to understand how their work behaves structurally, especially those working outside traditional forms or genres. For educators, it shows that analysis does not have to strip away creativity, it can give artists a language to describe and refine their intuition. For those working with AI in music, it highlights how patterns in data often reflect deeper artistic habits or workflows, a valuable reminder when building or critiquing generative systems.
+
+Ultimately, this process has helped me reflect on how I work, and how structure and freedom can coexist in sound.
+
